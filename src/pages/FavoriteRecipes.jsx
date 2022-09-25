@@ -6,7 +6,7 @@ function FavoriteRecipes() {
   return (
     <div>
       <h1 data-testid="page-title">Favorite Recipes</h1>
-      <Link to="/profile" data-testid="profile-top-btn">
+      <Link to="/profile">
         <img src={ imageProfile } alt="imagem de perfil" data-testid="profile-top-btn" />
       </Link>
     </div>

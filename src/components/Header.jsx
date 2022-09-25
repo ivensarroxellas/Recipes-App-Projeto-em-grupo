@@ -6,7 +6,7 @@ import imageSearch from '../images/searchIcon.svg';
 function Header() {
   return (
     <header>
-      <Link to="/profile" data-testid="profile-top-btn">
+      <Link to="/profile">
         <img src={ imageProfile } alt="imagem de perfil" data-testid="profile-top-btn" />
       </Link>
       <img src={ imageSearch } alt="imagem de pesquisa" data-testid="search-top-btn" />
