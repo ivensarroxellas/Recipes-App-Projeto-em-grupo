@@ -25,6 +25,7 @@ const showSearchBar = () => {
           <img src={ imageSearch } alt="" />
         </button>
         {renderSearchBar && <SearchBar />}
+
     </header>
   );
 }
