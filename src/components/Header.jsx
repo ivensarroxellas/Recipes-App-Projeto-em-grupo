@@ -9,9 +9,7 @@ function Header() {
       <Link to="/profile">
         <img src={ imageProfile } alt="imagem de perfil" data-testid="profile-top-btn" />
       </Link>
-      <button type="button">
-        <img src={ imageSearch } alt="imagem de pesquisa" data-testid="search-top-btn" />
-      </button>
+      <img src={ imageSearch } alt="imagem de pesquisa" data-testid="search-top-btn" />
     </header>
   );
 }
