@@ -2,56 +2,63 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 function Login({ history }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [userData, setUserData] = useState({
+    email: '',
+    password: '',
+  });
 
-  let isDisabled = true;
-  const NUMBER_SIX = 6;
-  if (/\S+@\S+\.\S+/.test(email) && password.length > NUMBER_SIX) {
-    isDisabled = false;
-  } else {
-    isDisabled = true;
-  }
+  const [isDisabled, setisDisabled] = useState(true);
 
-  const handleChangeEmail = ({ target }) => {
-    setEmail(target.value);
+  const { email, password } = userData;
+
+  const handleEnableButton = () => {
+    const passwordLength = 6;
+    const validatePassword = password.length >= passwordLength;
+    const enableButton = email.includes('@')
+      && email.toLowerCase().includes('.com') && validatePassword;
+    setisDisabled(!enableButton);
   };
 
-  const handleChangePassword = ({ target }) => {
-    setPassword(target.value);
+  const handleChange = ({ target: { name, value } }) => {
+    setUserData({
+      ...userData,
+      [name]: value,
+    });
+    handleEnableButton();
   };
 
   const handleSubmit = () => {
     localStorage.setItem('user', JSON.stringify({ email }));
     localStorage.setItem('mealsToken', 1);
     localStorage.setItem('drinksToken', 1);
+
     history.push('/meals');
   };
 
   return (
     <div>
       <form>
-        <label htmlFor="email-input">
+        <label htmlFor="email">
           Email:
           <input
             type="email"
-            name="email-input"
+            name="email"
             id="email-input"
             data-testid="email-input"
             value={ email }
-            onChange={ handleChangeEmail }
+            onChange={ handleChange }
           />
         </label>
 
-        <label htmlFor="password-input">
+        <label htmlFor="password">
           Senha:
           <input
             type="password"
-            name="password-input"
+            name="password"
             id="password-input"
             data-testid="password-input"
             value={ password }
-            onChange={ handleChangePassword }
+            onChange={ handleChange }
           />
         </label>
 
