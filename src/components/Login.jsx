@@ -43,7 +43,7 @@ function Login({ history }) {
           <input
             type="email"
             name="email"
-            id="email-input"
+            id="email"
             data-testid="email-input"
             value={ email }
             onChange={ handleChange }
@@ -55,7 +55,7 @@ function Login({ history }) {
           <input
             type="password"
             name="password"
-            id="password-input"
+            id="password"
             data-testid="password-input"
             value={ password }
             onChange={ handleChange }
