@@ -24,3 +24,17 @@ describe('Testando componente Profile', () => {
     expect(pathname).toBe('/');
   });
 });
+
+describe('Testando sem salvar no localStorage', () => {
+  it('Testando se as chaves estão salvas no localStorage corretamente', () => {
+    renderWithRouter(<App />, ['/profile']);
+
+    const userLocalStorage = localStorage.getItem('user');
+    const mealsTokenLocalStorage = localStorage.getItem('mealsToken');
+    const drinksTokenLocalStorage = localStorage.getItem('drinksToken');
+
+    expect(JSON.parse(userLocalStorage)).toStrictEqual(null);
+    expect(JSON.parse(mealsTokenLocalStorage)).toStrictEqual(null);
+    expect(JSON.parse(drinksTokenLocalStorage)).toStrictEqual(null);
+  });
+});
