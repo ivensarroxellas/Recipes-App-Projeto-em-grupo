@@ -18,9 +18,11 @@ function Header() {
         <img src={ imageProfile } alt="imagem de perfil" data-testid="profile-top-btn" />
       </Link>
       <button
-        data-testid="search-artist-button"
+        data-testid="search-top-btn"
         type="button"
         onClick={ showSearchBar }
+        src={ imageSearch }
+        alt="img"
       >
         <img src={ imageSearch } alt="" />
       </button>

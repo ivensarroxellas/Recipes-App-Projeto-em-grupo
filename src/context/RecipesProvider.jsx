@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import RecipesContext from './RecipesContext';
 
 function RecipesProvider({ children }) {
+  console.log(children);
+
   const contextValue = {
   };
   return (
