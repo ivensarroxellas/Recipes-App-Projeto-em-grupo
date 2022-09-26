@@ -5,13 +5,13 @@ import imageSearch from '../images/searchIcon.svg';
 import SearchBar from './SearchBar';
 
 function Header() {
-const [renderSearchBar, setSearchBar] = useState(false);
+  const [renderSearchBar, setSearchBar] = useState(false);
 
-const showSearchBar = () => {
-  if(renderSearchBar){
-    setSearchBar(false)
-  } else { setSearchBar(true)}
-}
+  const showSearchBar = () => {
+    if (renderSearchBar) {
+      setSearchBar(false);
+    } else { setSearchBar(true); }
+  };
   return (
     <header>
       <Link to="/profile">
@@ -21,10 +21,10 @@ const showSearchBar = () => {
         data-testid="search-artist-button"
         type="button"
         onClick={ showSearchBar }
-        >
-          <img src={ imageSearch } alt="" />
-        </button>
-        {renderSearchBar && <SearchBar />}
+      >
+        <img src={ imageSearch } alt="" />
+      </button>
+      {renderSearchBar && <SearchBar />}
 
     </header>
   );
