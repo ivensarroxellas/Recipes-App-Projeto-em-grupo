@@ -49,3 +49,17 @@ export const fetchInitialDrinks = async () => {
   const { drinks } = await response.json();
   return drinks;
 };
+
+// FILTER BUTTON FETCHS-----------------------------------------------------------
+
+export const fetchButtonMeals = async () => {
+  const response = await fetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list');
+  const { meals } = await response.json();
+  return meals;
+};
+
+export const fetchButtonDrinks = async () => {
+  const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list');
+  const { drinks } = await response.json();
+  return drinks;
+};
