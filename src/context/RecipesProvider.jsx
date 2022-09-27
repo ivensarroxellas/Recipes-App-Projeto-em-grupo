@@ -7,17 +7,17 @@ import { fetchMealsByIngredient,
   fetchDrinksByIngredient,
   fetchDrinksByFirstLetter,
   fetchDrinksByName,
+  fetchInitialMeals,
+  fetchInitialDrinks,
 } from '../service/fetch';
 
 function RecipesProvider({ children }) {
   const [meals, setMeals] = useState([]);
   const [drinks, setDrinks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [radioValue, setRadioValue] = useState('');
   const [path, setPath] = useState('');
-
-  console.log(drinks);
-  console.log(meals);
 
   const handleFetchSearch = async (search) => {
     switch (radioValue) {
@@ -49,12 +49,35 @@ function RecipesProvider({ children }) {
     default: return null;
     }
   };
+  const HandleInitialFetchMeals = async () => {
+    setLoading(true);
+    setMeals(await fetchInitialMeals());
+    setLoading(false);
+  };
+
+  const HandleInitialFetchDrinks = async () => {
+    setLoading(true);
+    setDrinks(await fetchInitialDrinks());
+    setLoading(false);
+  };
+
+  const handleInitialFetch = () => {
+    if (path === '/meals') {
+      HandleInitialFetchMeals();
+    } else if (path === '/drinks') {
+      HandleInitialFetchDrinks();
+    }
+  };
 
   const contextValue = {
     meals,
+    drinks,
+    path,
     radioValue,
+    loading,
     setRadioValue,
     handleFetchSearch,
+    handleInitialFetch,
     setPath,
   };
   return (
