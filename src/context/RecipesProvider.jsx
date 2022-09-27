@@ -10,6 +10,8 @@ import { fetchMealsByIngredient,
   fetchDrinksByName,
   fetchInitialMeals,
   fetchInitialDrinks,
+  fetchButtonMeals,
+  fetchButtonDrinks,
 } from '../service/fetch';
 import routValidator from '../service/routValidator';
 
@@ -17,6 +19,7 @@ function RecipesProvider({ children }) {
   const [meals, setMeals] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filterButtons, setFilterButtons] = useState([]);
 
   const [radioValue, setRadioValue] = useState('');
   const [path, setPath] = useState('');
@@ -77,15 +80,39 @@ function RecipesProvider({ children }) {
     }
   };
 
+  const HandleButtonFetchMeals = async () => {
+    setLoading(true);
+    setFilterButtons(await fetchButtonMeals());
+    setLoading(false);
+  };
+
+  const HandleButtonFetchDrinks = async () => {
+    setLoading(true);
+    setFilterButtons(await fetchButtonDrinks());
+    setLoading(false);
+  };
+
+  const handleButtonFetch = () => {
+    if (path === '/meals') {
+      HandleButtonFetchMeals();
+    } else if (path === '/drinks') {
+      HandleButtonFetchDrinks();
+    }
+  };
+
   const contextValue = {
     meals,
     drinks,
     path,
     radioValue,
     loading,
+    filterButtons,
     setRadioValue,
     handleFetchSearch,
     handleInitialFetch,
+    HandleButtonFetchMeals,
+    HandleButtonFetchDrinks,
+    handleButtonFetch,
     setPath,
   };
   return (

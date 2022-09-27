@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
 import imageProfile from '../images/profileIcon.svg';
 import imageSearch from '../images/searchIcon.svg';
+import FilterButton from './FilterButton';
 import SearchBar from './SearchBar';
 
 function Header() {
@@ -35,6 +36,7 @@ function Header() {
         <img src={ imageSearch } alt="" />
       </button>
       {renderSearchBar && <SearchBar />}
+      <FilterButton />
 
     </header>
   );

@@ -8,6 +8,7 @@ function CardList() {
 
   useEffect(() => {
     handleInitialFetch();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path]);
 
   if (loading) {
@@ -20,7 +21,7 @@ function CardList() {
         {meals.slice(0, DOZE).map((m, index) => (
           <div
             key={ m.strMeal }
-            className="div-cardRecipe"
+            className="div-cardList"
             data-testid={ `${index}-recipe-card` }
           >
             <h4 data-testid={ `${index}-card-name` }>{m.strMeal}</h4>
@@ -36,7 +37,7 @@ function CardList() {
         {drinks.slice(0, DOZE).map((m, index) => (
           <div
             key={ m.strDrink }
-            className="div-cardRecipe"
+            className="div-cardList"
             data-testid={ `${index}-recipe-card` }
           >
             <h4 data-testid={ `${index}-card-name` }>{m.strDrink}</h4>
