@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import RecipesContext from './RecipesContext';
 import { fetchMealsByIngredient,
   fetchMealsByName,
@@ -10,6 +11,7 @@ import { fetchMealsByIngredient,
   fetchInitialMeals,
   fetchInitialDrinks,
 } from '../service/fetch';
+import routValidator from '../service/routValidator';
 
 function RecipesProvider({ children }) {
   const [meals, setMeals] = useState([]);
@@ -18,6 +20,12 @@ function RecipesProvider({ children }) {
 
   const [radioValue, setRadioValue] = useState('');
   const [path, setPath] = useState('');
+  const history = useHistory();
+
+  useEffect(() => {
+    routValidator(path, meals, drinks, history);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [meals, drinks]);
 
   const handleFetchSearch = async (search) => {
     switch (radioValue) {

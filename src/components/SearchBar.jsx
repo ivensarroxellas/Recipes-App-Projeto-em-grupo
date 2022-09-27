@@ -28,6 +28,7 @@ function SearchBar() {
       <button
         type="button"
         data-testid="exec-search-btn"
+        value={ search }
         onClick={ () => handleFetchSearch(search) }
       >
         Buscar
