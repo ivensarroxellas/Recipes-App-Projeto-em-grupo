@@ -1,42 +1,18 @@
-import React, { useState } from 'react';
-import { fetchMealsByIngredient,
-  fetchMealsByName,
-  fetchMealsByFirstLetter } from '../service/fetch';
+import React, { useContext, useState } from 'react';
+import RecipesContext from '../context/RecipesContext';
 
 function SearchBar() {
+  const { setRadioValue, handleFetchSearch } = useContext(RecipesContext);
   const [search, setSearch] = useState('');
-  const [radioValue, setradioValue] = useState('');
-
-  const handleFetchSearch = async () => {
-    switch (radioValue) {
-    case 'ingredient':
-      await fetchMealsByIngredient(search);
-      break;
-
-    case 'name':
-      await fetchMealsByName(search);
-      break;
-
-    case 'firstLetter':
-      if (search.length > 1) {
-        global.alert('Your search must have only 1 (one) character');
-      } else {
-        await fetchMealsByFirstLetter(search);
-      }
-      break;
-    default: return null;
-    }
-  };
 
   const handleChange = ({ target: { value } }) => {
     setSearch(value);
   };
 
   const handleRadio = ({ target: { value } }) => {
-    setradioValue(value);
+    setRadioValue(value);
   };
 
-  // console.log(path);
   return (
 
     <div>
@@ -52,7 +28,7 @@ function SearchBar() {
       <button
         type="button"
         data-testid="exec-search-btn"
-        onClick={ handleFetchSearch }
+        onClick={ () => handleFetchSearch(search) }
       >
         Buscar
       </button>
