@@ -15,7 +15,7 @@ function SearchBar() {
 
   return (
 
-    <div>
+    <div data-testid="search-bar-content">
 
       <input
         placeholder="Faça sua busca"
