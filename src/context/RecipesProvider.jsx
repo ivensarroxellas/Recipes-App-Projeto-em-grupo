@@ -10,83 +10,81 @@ import { fetchMealsByIngredient,
   fetchDrinksByName,
   fetchInitialMeals,
   fetchInitialDrinks,
+
 } from '../service/fetch';
 import routValidator from '../service/routValidator';
 
-function RecipesProvider({ children }) {
-  const [meals, setMeals] = useState([]);
-  const [drinks, setDrinks] = useState([]);
-  const [loading, setLoading] = useState(true);
+const NUMBER_TO_SLICE = 12;
+const slicer = (arr) => arr.slice(0, NUMBER_TO_SLICE);
 
+function RecipesProvider({ children }) {
+  const [filtredMeals, setMeals] = useState([]);
+  const [filtredDrinks, setDrinks] = useState([]);
+
+  const [initialMeals, setInitialMeals] = useState([]);
+  const [initialDrinks, setInitialDrinks] = useState([]);
   const [radioValue, setRadioValue] = useState('');
   const [path, setPath] = useState('');
   const history = useHistory();
 
   useEffect(() => {
-    routValidator(path, meals, drinks, history);
+    routValidator(path, filtredMeals, filtredDrinks, history);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [meals, drinks]);
+  }, [filtredMeals, filtredDrinks]);
+
+  // console.log(initialMeals);
+
+  useEffect(() => {
+    const setInitialState = async () => {
+      setInitialMeals(slicer(await fetchInitialMeals()));
+      setInitialDrinks(slicer(await fetchInitialDrinks()));
+    };
+    setInitialState();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleFetchSearch = async (search) => {
     switch (radioValue) {
     case 'ingredient':
       if (path === '/meals') {
-        setMeals(await fetchMealsByIngredient(search));
+        setMeals(slicer(await fetchMealsByIngredient(search)));
       } else if (path === '/drinks') {
-        setDrinks(await fetchDrinksByIngredient(search));
+        setDrinks(slicer(await fetchDrinksByIngredient(search)));
       }
       break;
 
     case 'name':
       if (path === '/meals') {
-        setMeals(await fetchMealsByName(search));
+        setMeals(slicer(await fetchMealsByName(search)));
       } else if (path === '/drinks') {
-        setDrinks(await fetchDrinksByName(search));
+        setDrinks(slicer(await fetchDrinksByName(search)));
       }
       break;
 
     case 'firstLetter':
       if (search.length > 1) {
         global.alert('Your search must have only 1 (one) character');
-      } else if (path === '/meals') {
-        setMeals(await fetchMealsByFirstLetter(search));
-      } else if (path === '/drinks') {
-        setDrinks(await fetchDrinksByFirstLetter(search));
+      } if (path === '/meals') {
+        setMeals(slicer(await fetchMealsByFirstLetter(search)));
+      } if (path === '/drinks') {
+        setDrinks(slicer(await fetchDrinksByFirstLetter(search)));
       }
       break;
     default: return null;
     }
   };
-  const HandleInitialFetchMeals = async () => {
-    setLoading(true);
-    setMeals(await fetchInitialMeals());
-    setLoading(false);
-  };
-
-  const HandleInitialFetchDrinks = async () => {
-    setLoading(true);
-    setDrinks(await fetchInitialDrinks());
-    setLoading(false);
-  };
-
-  const handleInitialFetch = () => {
-    if (path === '/meals') {
-      HandleInitialFetchMeals();
-    } else if (path === '/drinks') {
-      HandleInitialFetchDrinks();
-    }
-  };
-
   const contextValue = {
-    meals,
-    drinks,
+    filtredMeals,
+    filtredDrinks,
     path,
     radioValue,
-    loading,
+    initialMeals,
+    initialDrinks,
     setRadioValue,
     handleFetchSearch,
-    handleInitialFetch,
     setPath,
+    setMeals,
   };
   return (
     <RecipesContext.Provider value={ contextValue }>
