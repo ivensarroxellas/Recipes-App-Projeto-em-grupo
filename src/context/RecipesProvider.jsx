@@ -10,21 +10,30 @@ import { fetchMealsByIngredient,
   fetchDrinksByName,
   fetchInitialMeals,
   fetchInitialDrinks,
-
+  fetchButtonMeals,
+  fetchButtonDrinks,
 } from '../service/fetch';
 import routValidator from '../service/routValidator';
 
 const NUMBER_TO_SLICE = 12;
+const SLICER5 = 5;
+
 const slicer = (arr) => arr.slice(0, NUMBER_TO_SLICE);
+
+const slicer5 = (arr) => arr.slice(0, SLICER5);
 
 function RecipesProvider({ children }) {
   const [filtredMeals, setMeals] = useState([]);
-  const [filtredDrinks, setDrinks] = useState([]);
-
   const [initialMeals, setInitialMeals] = useState([]);
+
+  const [filtredDrinks, setDrinks] = useState([]);
   const [initialDrinks, setInitialDrinks] = useState([]);
+
+  const [filterButtons, setFilterButtons] = useState([]);
+
   const [radioValue, setRadioValue] = useState('');
   const [path, setPath] = useState('');
+
   const history = useHistory();
 
   useEffect(() => {
@@ -74,6 +83,23 @@ function RecipesProvider({ children }) {
     default: return null;
     }
   };
+
+  const HandleButtonFetchMeals = async () => {
+    setFilterButtons(slicer5(await fetchButtonMeals()));
+  };
+
+  const HandleButtonFetchDrinks = async () => {
+    setFilterButtons(slicer5(await fetchButtonDrinks()));
+  };
+
+  const handleButtonFetch = () => {
+    if (path === '/meals') {
+      HandleButtonFetchMeals();
+    } else if (path === '/drinks') {
+      HandleButtonFetchDrinks();
+    }
+  };
+
   const contextValue = {
     filtredMeals,
     filtredDrinks,
@@ -85,6 +111,10 @@ function RecipesProvider({ children }) {
     handleFetchSearch,
     setPath,
     setMeals,
+    HandleButtonFetchMeals,
+    HandleButtonFetchDrinks,
+    handleButtonFetch,
+    filterButtons,
   };
   return (
     <RecipesContext.Provider value={ contextValue }>

@@ -67,14 +67,16 @@ export const fetchInitialDrinks = async () => {
   return drinks;
 };
 
-// CATEGORY FETCH-------------------------------------------------------------
+// FILTER BUTTON FETCHS-----------------------------------------------------------
 
-export const fetchCategoryes = async () => {
+export const fetchButtonMeals = async () => {
   const response = await fetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list');
-  const data = await response.json();
-
-  console.log(data);
+  const { meals } = await response.json();
+  return meals;
 };
 
-// fetchCategoryes('Chicken');
-fetchCategoryes();
+export const fetchButtonDrinks = async () => {
+  const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list');
+  const { drinks } = await response.json();
+  return drinks;
+};
