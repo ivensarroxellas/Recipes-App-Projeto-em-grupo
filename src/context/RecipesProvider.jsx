@@ -17,7 +17,8 @@ function RecipesProvider({ children }) {
   const [meals, setMeals] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [mealDetails, setMealDetails] = useState([]);
+  const [drinkDetails, setDrinkDetails] = useState([]);
   const [radioValue, setRadioValue] = useState('');
   const [path, setPath] = useState('');
   const history = useHistory();
@@ -83,10 +84,14 @@ function RecipesProvider({ children }) {
     path,
     radioValue,
     loading,
+    mealDetails,
+    drinkDetails,
     setRadioValue,
     handleFetchSearch,
     handleInitialFetch,
     setPath,
+    setMealDetails,
+    setDrinkDetails,
   };
   return (
     <RecipesContext.Provider value={ contextValue }>
