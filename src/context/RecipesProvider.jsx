@@ -54,6 +54,7 @@ function RecipesProvider({ children }) {
   }, []);
 
   const handleFetchSearch = async (search) => {
+    console.log(search);
     switch (radioValue) {
     case 'ingredient':
       if (path === '/meals') {
@@ -99,7 +100,7 @@ function RecipesProvider({ children }) {
       HandleButtonFetchDrinks();
     }
   };
-  console.log(filtredMeals);
+
   const contextValue = {
     filtredMeals,
     filtredDrinks,
