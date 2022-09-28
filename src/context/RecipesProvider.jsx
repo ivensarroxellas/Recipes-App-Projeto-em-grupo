@@ -23,10 +23,10 @@ const slicer = (arr) => arr.slice(0, NUMBER_TO_SLICE);
 const slicer5 = (arr) => arr.slice(0, SLICER5);
 
 function RecipesProvider({ children }) {
-  const [filtredMeals, setMeals] = useState([]);
+  const [filtredMeals, setFiltredMeals] = useState([]);
   const [initialMeals, setInitialMeals] = useState([]);
 
-  const [filtredDrinks, setDrinks] = useState([]);
+  const [filtredDrinks, setFiltredDrinks] = useState([]);
   const [initialDrinks, setInitialDrinks] = useState([]);
 
   const [filterButtons, setFilterButtons] = useState([]);
@@ -57,17 +57,17 @@ function RecipesProvider({ children }) {
     switch (radioValue) {
     case 'ingredient':
       if (path === '/meals') {
-        setMeals(slicer(await fetchMealsByIngredient(search)));
+        setFiltredMeals(slicer(await fetchMealsByIngredient(search)));
       } else if (path === '/drinks') {
-        setDrinks(slicer(await fetchDrinksByIngredient(search)));
+        setFiltredDrinks(slicer(await fetchDrinksByIngredient(search)));
       }
       break;
 
     case 'name':
       if (path === '/meals') {
-        setMeals(slicer(await fetchMealsByName(search)));
+        setFiltredMeals(slicer(await fetchMealsByName(search)));
       } else if (path === '/drinks') {
-        setDrinks(slicer(await fetchDrinksByName(search)));
+        setFiltredDrinks(slicer(await fetchDrinksByName(search)));
       }
       break;
 
@@ -75,9 +75,9 @@ function RecipesProvider({ children }) {
       if (search.length > 1) {
         global.alert('Your search must have only 1 (one) character');
       } if (path === '/meals') {
-        setMeals(slicer(await fetchMealsByFirstLetter(search)));
+        setFiltredMeals(slicer(await fetchMealsByFirstLetter(search)));
       } if (path === '/drinks') {
-        setDrinks(slicer(await fetchDrinksByFirstLetter(search)));
+        setFiltredDrinks(slicer(await fetchDrinksByFirstLetter(search)));
       }
       break;
     default: return null;
@@ -99,7 +99,7 @@ function RecipesProvider({ children }) {
       HandleButtonFetchDrinks();
     }
   };
-
+  console.log(filtredMeals);
   const contextValue = {
     filtredMeals,
     filtredDrinks,
@@ -110,7 +110,7 @@ function RecipesProvider({ children }) {
     setRadioValue,
     handleFetchSearch,
     setPath,
-    setMeals,
+    setFiltredDrinks,
     HandleButtonFetchMeals,
     HandleButtonFetchDrinks,
     handleButtonFetch,

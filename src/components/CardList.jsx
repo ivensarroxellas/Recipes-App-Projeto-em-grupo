@@ -9,8 +9,8 @@ function CardList() {
     initialMeals, initialDrinks, path } = useContext(RecipesContext);
 
   // console.log(handleSliceArr(filtredMeals));
-  console.log(filtredDrinks);
 
+  console.log(filtredMeals);
   const mealsVerificator = !filtredMeals.length
     ? showMealCard(initialMeals)
     : showMealCard(filtredMeals);
