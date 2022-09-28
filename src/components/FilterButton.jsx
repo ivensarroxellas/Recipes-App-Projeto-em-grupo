@@ -18,13 +18,16 @@ function FilterButton() {
     );
   } return (
     <div className="div-filterButton">
-      {console.log(filterButtons)}
       {filterButtons.slice(0, CINCO).map((f, index) => (
         <div
           key={ index }
-          data-testid={ `${f.strCategory}-category-filter` }
         >
-          <h4>{f.strCategory}</h4>
+          <button
+            data-testid={ `${f.strCategory}-category-filter` }
+            type="button"
+          >
+            {f.strCategory}
+          </button>
         </div>
       ))}
     </div>
