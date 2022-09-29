@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
 import imageProfile from '../images/profileIcon.svg';
 import imageSearch from '../images/searchIcon.svg';
-import FilterButton from './FilterButton';
+// import FilterButton from './FilterButton';
 import SearchBar from './SearchBar';
 
 function Header() {
