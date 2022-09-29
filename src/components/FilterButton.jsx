@@ -11,7 +11,6 @@ function FilterButton() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path]);
 
-  console.log(filterButtons);
   return (
     <div className="div-filterButton">
       {filterButtons.map((f, index) => (
