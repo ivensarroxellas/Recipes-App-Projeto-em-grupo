@@ -1,11 +1,19 @@
 import history from './history';
 
-// CONSERTAR ESSE handle
+function getCurrentURL() {
+  return window.location;
+}
+
 const handleRedirect = (id) => {
+  const url = getCurrentURL();
+  const { pathname } = url;
   if (pathname.includes('drinks')) {
     history.push(`/drinks/${id}`);
-  } else {
+    window.location.reload(true);
+  }
+  if (pathname.includes('meals')) {
     history.push(`/meals/${id}`);
+    window.location.reload(true);
   }
 };
 const showMealCard = (arr) => arr.map(({ strMeal, strMealThumb, idMeal }, index) => (
