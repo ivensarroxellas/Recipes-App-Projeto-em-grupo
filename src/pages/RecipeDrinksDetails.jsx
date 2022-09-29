@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 // Auxílio Luiz Filipe
-function RecipeDrinksDetails() {
-  const { id } = useParams();
+function RecipeDrinksDetails({ match }) {
   const [drinkDetails, setDrinkDetails] = useState({});
+  const { params: { id } } = match;
 
   useEffect(() => {
     const fetchDrink = async () => {
@@ -17,8 +17,8 @@ function RecipeDrinksDetails() {
 
   const rendIngredients = () => {
     const ingredients = [];
-    const maxIngredients = 15;
-    for (let index = 0; index <= maxIngredients; index += 1) {
+    const NUMBER_QUINZE = 15;
+    for (let index = 0; index <= NUMBER_QUINZE; index += 1) {
       const ingredient = `strIngredient${index}`;
       const measure = `strMeasure${index}`;
       if (drinkDetails[ingredient] && drinkDetails[measure] !== null) {
@@ -52,4 +52,13 @@ function RecipeDrinksDetails() {
     </>
   );
 }
+
+RecipeDrinksDetails.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    }),
+  }).isRequired,
+};
+
 export default RecipeDrinksDetails;

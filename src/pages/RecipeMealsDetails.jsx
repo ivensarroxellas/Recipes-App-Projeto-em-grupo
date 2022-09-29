@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 // Auxílio Luiz Filipe
-function RecipeMealsDetails() {
-  const { id } = useParams();
+function RecipeMealsDetails({ match }) {
   const [RecipeMeals, setRecipeMeals] = useState({});
+  const { params: { id } } = match;
 
   const embedURL = (url) => {
     if (url) {
@@ -17,16 +17,16 @@ function RecipeMealsDetails() {
   useEffect(() => {
     const fetchMeal = async () => {
       const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
-      const { meals } = await response.json();
-      setRecipeMeals(meals[0]);
+      const data = await response.json();
+      setRecipeMeals(data.meals[0]);
     };
     fetchMeal();
   }, [id]);
 
   const rendIngredients = () => {
     const ingredients = [];
-    const maxIngredients = 20;
-    for (let index = 0; index <= maxIngredients; index += 1) {
+    const NUMBER_QUINZE = 20;
+    for (let index = 0; index <= NUMBER_QUINZE; index += 1) {
       const ingredient = `strIngredient${index}`;
       const measure = `strMeasure${index}`;
       if (RecipeMeals[ingredient] && RecipeMeals[measure] !== null) {
@@ -67,5 +67,13 @@ function RecipeMealsDetails() {
     </>
   );
 }
+
+RecipeMealsDetails.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    }),
+  }).isRequired,
+};
 
 export default RecipeMealsDetails;
