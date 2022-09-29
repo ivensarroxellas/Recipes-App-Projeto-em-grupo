@@ -49,6 +49,14 @@ function RecipeDrinksDetails({ match }) {
         ))}
       </ul>
       <p data-testid="instructions">{drinkDetails.strInstructions}</p>
+      <button
+        data-testid="start-recipe-btn"
+        type="button"
+        name="startRecipe"
+        className="fixed-bottom"
+      >
+        Start Recipe
+      </button>
     </>
   );
 }
