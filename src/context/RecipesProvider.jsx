@@ -10,17 +10,14 @@ import { fetchMealsByIngredient,
   fetchDrinksByName,
   fetchInitialMeals,
   fetchInitialDrinks,
-  fetchButtonMeals,
-  fetchButtonDrinks,
+  // fetchButtonMeals,
+  // fetchButtonDrinks,
   fetchMealsCategory,
   fetchDrinksCategory,
 } from '../service/fetch';
 
 import routValidator from '../service/routValidator';
 import slicer from '../service/slicer';
-
-const SLICER5 = 5;
-const slicer5 = (arr) => arr.slice(0, SLICER5);
 
 function RecipesProvider({ children }) {
   const [filtredMeals, setFiltredMeals] = useState([]);
@@ -29,7 +26,6 @@ function RecipesProvider({ children }) {
   const [filtredDrinks, setFiltredDrinks] = useState([]);
   const [initialDrinks, setInitialDrinks] = useState([]);
 
-  const [filterButtons, setFilterButtons] = useState([]);
   const [categoryFilter, setCategoryFilter] = useState([]);
 
   const [filtredCategoryMeals, setFiltredCategoryMeals] = useState([]);
@@ -53,7 +49,7 @@ function RecipesProvider({ children }) {
     };
     setInitialState();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialMeals, initialDrinks]);
+  }, []);
 
   const handleFetchSearch = async (search) => {
     switch (radioValue) {
@@ -86,21 +82,8 @@ function RecipesProvider({ children }) {
     }
   };
 
-  const HandleButtonFetchMeals = async () => {
-    setFilterButtons(slicer5(await fetchButtonMeals()));
-  };
+  // console.log(filterButtons);
 
-  const HandleButtonFetchDrinks = async () => {
-    setFilterButtons(slicer5(await fetchButtonDrinks()));
-  };
-
-  const handleButtonFetch = () => {
-    if (pathname === '/meals') {
-      HandleButtonFetchMeals();
-    } else if (pathname === '/drinks') {
-      HandleButtonFetchDrinks();
-    }
-  };
   const handleCategoryMeals = async () => {
     setFiltredCategoryMeals(await fetchMealsCategory(categoryFilter));
   };
@@ -108,6 +91,8 @@ function RecipesProvider({ children }) {
   const handleCategoryDrinks = async () => {
     setFiltredCategoryDrinks(await fetchDrinksCategory(categoryFilter));
   };
+
+  // console.log(filterButtons);
 
   useEffect(() => {
     handleCategoryMeals();
@@ -130,15 +115,10 @@ function RecipesProvider({ children }) {
     setRadioValue,
     handleFetchSearch,
     setFiltredDrinks,
-    HandleButtonFetchMeals,
-    HandleButtonFetchDrinks,
-    handleButtonFetch,
-    filterButtons,
     setCategoryFilter,
     filtredCategoryMeals,
     filtredCategoryDrinks,
     pathname,
-
   };
   return (
     <RecipesContext.Provider value={ contextValue }>

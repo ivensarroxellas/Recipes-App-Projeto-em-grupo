@@ -1,21 +1,21 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
 import { showDrinkCard, showMealCard } from '../service/index';
 import '../styles/components/CardList.css';
+import FilterButton from './FilterButton';
 
 function CardList() {
   const { filtredMeals, filtredDrinks,
     initialMeals,
     initialDrinks,
-    pathname,
     filtredCategoryMeals,
     filtredCategoryDrinks,
     categoryFilter,
   } = useContext(RecipesContext);
 
-  // useEffect(() => {
-  //   getCurrentURL();
-  // }, []);
+  const history = useHistory();
+  const { location: { pathname } } = history;
 
   const mealsVerificator = !filtredMeals.length
     ? showMealCard(initialMeals)
@@ -44,12 +44,13 @@ function CardList() {
     } return handleShowInitialRecipes();
   };
 
-  console.log(initialMeals);
-
   const conditionalShowRecipes = () => {
     const categoryMeals = ['Beef', 'Breakfast', 'Chicken', 'Dessert', 'Goat'];
     const categoryDrinks = ['Ordinary', 'Cocktail', 'Shake', 'Other/Unknow', 'Cocoa'];
+
     const categoryVerificator = (arr, word) => arr.some((category) => category === word);
+
+    console.log(categoryFilter);
 
     if (categoryVerificator(categoryMeals, categoryFilter)) {
       return handleShowCategoryMeals();
@@ -58,14 +59,13 @@ function CardList() {
     } return handleShowInitialRecipes();
   };
 
-  useEffect(() => {
-    handleShowInitialRecipes();
-  }, [initialMeals, initialDrinks]);
-
   return (
 
     <div>
-      { conditionalShowRecipes()}
+      <section>
+        <FilterButton />
+      </section>
+      { conditionalShowRecipes() }
     </div>
 
   );

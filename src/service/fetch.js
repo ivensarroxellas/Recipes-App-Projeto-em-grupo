@@ -117,9 +117,3 @@ export const fetchDrinksCategory = async (category) => {
 
   return slicer(drinks);
 };
-
-// if (drinks === null) {
-//   global.alert('Sorry, we haven\'t found any recipes for these filters.');
-//   const result = await fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
-//   const data = await result.json();
-//   return data.drinks;

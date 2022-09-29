@@ -29,7 +29,6 @@ function Header() {
         <img src={ imageSearch } alt="" />
       </button>
       {renderSearchBar && <SearchBar />}
-      <FilterButton />
 
     </header>
   );
