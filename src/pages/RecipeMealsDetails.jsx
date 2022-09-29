@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import CarouselDrinks from '../components/CarouselDrinks';
+
 // Auxílio Luiz Filipe
 function RecipeMealsDetails({ match }) {
   const [RecipeMeals, setRecipeMeals] = useState({});
@@ -53,13 +55,18 @@ function RecipeMealsDetails({ match }) {
         ))}
       </ul>
       <p data-testid="instructions">{RecipeMeals.strInstructions}</p>
-      { embedURL(RecipeMeals.strYoutube)
+      {
+        embedURL(RecipeMeals.strYoutube)
         && <iframe
           src={ embedURL(RecipeMeals.strYoutube) }
           title={ RecipeMeals.strMeal }
           allowFullScreen
           data-testid="video"
-        />}
+        />
+      }
+      <div>
+        <CarouselDrinks />
+      </div>
       <button
         data-testid="start-recipe-btn"
         type="button"
@@ -71,6 +78,7 @@ function RecipeMealsDetails({ match }) {
     </>
   );
 }
+
 RecipeMealsDetails.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -78,4 +86,5 @@ RecipeMealsDetails.propTypes = {
     }),
   }).isRequired,
 };
+
 export default RecipeMealsDetails;

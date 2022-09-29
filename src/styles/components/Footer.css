@@ -3,3 +3,16 @@
   justify-content: space-between;
   padding: 0.5rem 1rem;
 }
+
+.scroll {
+  display: flex;
+  gap: 10px;
+  overflow: auto;
+  width: 100vw;
+}
+
+.scroll-child {
+  height: 100%;
+  text-align: center;
+  width: 50%;
+}

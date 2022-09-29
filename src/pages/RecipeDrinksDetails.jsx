@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import CarouselMeals from '../components/CarouselMeals';
 
 // Auxílio Luiz Filipe
 function RecipeDrinksDetails({ match }) {
@@ -49,6 +50,10 @@ function RecipeDrinksDetails({ match }) {
         ))}
       </ul>
       <p data-testid="instructions">{drinkDetails.strInstructions}</p>
+
+      <div>
+        <CarouselMeals />
+      </div>
       <button
         data-testid="start-recipe-btn"
         type="button"
