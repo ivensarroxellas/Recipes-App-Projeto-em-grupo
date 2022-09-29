@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import CarouselDrinks from '../components/CarouselDrinks';
 
 // Auxílio Luiz Filipe
 function RecipeMealsDetails({ match }) {
@@ -64,6 +65,10 @@ function RecipeMealsDetails({ match }) {
           allowFullScreen
           data-testid="video"
         />}
+
+      <div>
+        <CarouselDrinks />
+      </div>
     </>
   );
 }
