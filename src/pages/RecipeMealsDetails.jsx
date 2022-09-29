@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import CarouselDrinks from '../components/CarouselDrinks';
 import { useParams } from 'react-router-dom';
 
 // Auxílio Luiz Filipe
@@ -24,11 +26,8 @@ function RecipeMealsDetails() {
   }, [id]);
   const rendIngredients = () => {
     const ingredients = [];
-<<<<<<< HEAD
     const NUMBER_QUINZE = 15;
-=======
     const NUMBER_QUINZE = 20;
->>>>>>> c88ab41951f31976231f6a87634387e453c0db88
     for (let index = 0; index <= NUMBER_QUINZE; index += 1) {
       const ingredient = `strIngredient${index}`;
       const measure = `strMeasure${index}`;
@@ -58,13 +57,11 @@ function RecipeMealsDetails() {
           </li>
         ))}
       </ul>
-<<<<<<< HEAD
       <p data-testid="instructions">{drinkDetails.strInstructions}</p>
     </>
   );
 }
 RecipeDrinksDetails.propTypes = {
-=======
       <p data-testid="instructions">{RecipeMeals.strInstructions}</p>
       { embedURL(RecipeMeals.strYoutube)
         && <iframe
@@ -73,6 +70,10 @@ RecipeDrinksDetails.propTypes = {
           allowFullScreen
           data-testid="video"
         />}
+
+      <div>
+        <CarouselDrinks />
+      </div>
       <button
         data-testid="start-recipe-btn"
         type="button"
@@ -86,16 +87,12 @@ RecipeDrinksDetails.propTypes = {
 }
 
 RecipeMealsDetails.propTypes = {
->>>>>>> c88ab41951f31976231f6a87634387e453c0db88
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
     }),
   }).isRequired,
 };
-<<<<<<< HEAD
 export default RecipeDrinksDetails;
-=======
 
 export default RecipeMealsDetails;
->>>>>>> c88ab41951f31976231f6a87634387e453c0db88
