@@ -3,6 +3,10 @@ import history from './history';
 function getCurrentURL() {
   return window.location;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> c88ab41951f31976231f6a87634387e453c0db88
 const handleRedirect = (id) => {
   const url = getCurrentURL();
   const { pathname } = url;

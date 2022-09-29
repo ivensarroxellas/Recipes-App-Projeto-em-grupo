@@ -1,20 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
+
 // Auxílio Luiz Filipe
-function RecipeDrinksDetails({ match }) {
-  const [drinkDetails, setDrinkDetails] = useState({});
-  const { params: { id } } = match;
+function RecipeMealsDetails() {
+  const { id } = useParams();
+  const [RecipeMeals, setRecipeMeals] = useState({});
+
+  const embedURL = (url) => {
+    if (url) {
+      const URL = url;
+      const newURL = URL.replace('watch?v=', 'embed/');
+      return newURL;
+    }
+  };
+
   useEffect(() => {
-    const fetchDrink = async () => {
-      const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
-      const data = await response.json();
-      setDrinkDetails(data.drinks[0]);
+    const fetchMeal = async () => {
+      const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
+      const { meals } = await response.json();
+      setRecipeMeals(meals[0]);
     };
-    fetchDrink();
+    fetchMeal();
   }, [id]);
   const rendIngredients = () => {
     const ingredients = [];
+<<<<<<< HEAD
     const NUMBER_QUINZE = 15;
+=======
+    const NUMBER_QUINZE = 20;
+>>>>>>> c88ab41951f31976231f6a87634387e453c0db88
     for (let index = 0; index <= NUMBER_QUINZE; index += 1) {
       const ingredient = `strIngredient${index}`;
       const measure = `strMeasure${index}`;
@@ -44,15 +58,44 @@ function RecipeDrinksDetails({ match }) {
           </li>
         ))}
       </ul>
+<<<<<<< HEAD
       <p data-testid="instructions">{drinkDetails.strInstructions}</p>
     </>
   );
 }
 RecipeDrinksDetails.propTypes = {
+=======
+      <p data-testid="instructions">{RecipeMeals.strInstructions}</p>
+      { embedURL(RecipeMeals.strYoutube)
+        && <iframe
+          src={ embedURL(RecipeMeals.strYoutube) }
+          title={ RecipeMeals.strMeal }
+          allowFullScreen
+          data-testid="video"
+        />}
+      <button
+        data-testid="start-recipe-btn"
+        type="button"
+        name="startRecipe"
+        className="fixed-bottom"
+      >
+        Start Recipe
+      </button>
+    </>
+  );
+}
+
+RecipeMealsDetails.propTypes = {
+>>>>>>> c88ab41951f31976231f6a87634387e453c0db88
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
     }),
   }).isRequired,
 };
+<<<<<<< HEAD
 export default RecipeDrinksDetails;
+=======
+
+export default RecipeMealsDetails;
+>>>>>>> c88ab41951f31976231f6a87634387e453c0db88
