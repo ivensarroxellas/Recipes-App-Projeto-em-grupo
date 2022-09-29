@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 
-function Login({ history }) {
+function Login() {
   const [userData, setUserData] = useState({
     email: '',
     password: '',
   });
+  const history = useHistory();
 
   const [isDisabled, setisDisabled] = useState(true);
 

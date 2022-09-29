@@ -1,11 +1,18 @@
 import history from './history';
 
-// CONSERTAR ESSE handle
+function getCurrentURL() {
+  return window.location;
+}
 const handleRedirect = (id) => {
+  const url = getCurrentURL();
+  const { pathname } = url;
   if (pathname.includes('drinks')) {
     history.push(`/drinks/${id}`);
-  } else {
+    window.location.reload(true);
+  }
+  if (pathname.includes('meals')) {
     history.push(`/meals/${id}`);
+    window.location.reload(true);
   }
 };
 const showMealCard = (arr) => arr.map(({ strMeal, strMealThumb, idMeal }, index) => (
@@ -13,40 +20,42 @@ const showMealCard = (arr) => arr.map(({ strMeal, strMealThumb, idMeal }, index)
     key={ idMeal }
   >
     <h4 data-testid={ `${index}-card-name` }>{strMeal}</h4>
+    <img
+      src={ strMealThumb }
+      alt={ strMeal }
+      role="presentation"
+      data-testid={ `${index}-card-img` }
+    />
     <button
       key={ index }
       data-testid={ `${index}-recipe-card` }
       type="button"
-      name="recipes"
+      name="recipe"
       onClick={ () => handleRedirect(idMeal) }
     >
-      <img
-        src={ strMealThumb }
-        alt={ strMeal }
-        data-testid={ `${index}-card-img` }
-      />
+      Detalhes
     </button>
   </section>
 ));
-
 const showDrinkCard = (arr) => arr
   .map(({ strDrink, strDrinkThumb, idDrink }, index) => (
     <section
       key={ idDrink }
     >
       <h4 data-testid={ `${index}-card-name` }>{strDrink}</h4>
+      <img
+        src={ strDrinkThumb }
+        alt={ strDrink }
+        data-testid={ `${index}-card-img` }
+      />
       <button
         key={ index }
         data-testid={ `${index}-recipe-card` }
         type="button"
-        name="recipes"
+        name="recipe"
         onClick={ () => handleRedirect(idDrink) }
       >
-        <img
-          src={ strDrinkThumb }
-          alt={ strDrink }
-          data-testid={ `${index}-card-img` }
-        />
+        Detalhes
       </button>
     </section>
   ));

@@ -3,13 +3,18 @@ import RecipesContext from '../context/RecipesContext';
 import '../styles/components/CardList.css';
 
 function FilterButton() {
-  const { handleButtonFetch, path,
-    filterButtons } = useContext(RecipesContext);
+  const { handleButtonFetch, pathname,
+    filterButtons, setCategoryFilter } = useContext(RecipesContext);
 
   useEffect(() => {
     handleButtonFetch();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [path]);
+  }, [pathname]);
+
+  const handleChange = ({ target: { value } }) => {
+    setCategoryFilter(value);
+  };
 
   return (
     <div className="div-filterButton">
@@ -20,6 +25,8 @@ function FilterButton() {
           <button
             data-testid={ `${f.strCategory}-category-filter` }
             type="button"
+            value={ f.strCategory }
+            onClick={ handleChange }
           >
             {f.strCategory}
           </button>
