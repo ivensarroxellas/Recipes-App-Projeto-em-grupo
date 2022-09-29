@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import CarouselDrinks from '../components/CarouselDrinks';
+import { useParams } from 'react-router-dom';
 
 // Auxílio Luiz Filipe
-function RecipeMealsDetails({ match }) {
+function RecipeMealsDetails() {
+  const { id } = useParams();
   const [RecipeMeals, setRecipeMeals] = useState({});
-  const { params: { id } } = match;
 
   const embedURL = (url) => {
     if (url) {
@@ -18,34 +19,33 @@ function RecipeMealsDetails({ match }) {
   useEffect(() => {
     const fetchMeal = async () => {
       const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
-      const data = await response.json();
-      setRecipeMeals(data.meals[0]);
+      const { meals } = await response.json();
+      setRecipeMeals(meals[0]);
     };
     fetchMeal();
   }, [id]);
-
   const rendIngredients = () => {
     const ingredients = [];
+    const NUMBER_QUINZE = 15;
     const NUMBER_QUINZE = 20;
     for (let index = 0; index <= NUMBER_QUINZE; index += 1) {
       const ingredient = `strIngredient${index}`;
       const measure = `strMeasure${index}`;
-      if (RecipeMeals[ingredient] && RecipeMeals[measure] !== null) {
-        ingredients.push(`${RecipeMeals[ingredient]} (${RecipeMeals[measure]}) `);
+      if (drinkDetails[ingredient] && drinkDetails[measure] !== null) {
+        ingredients.push(`${drinkDetails[ingredient]} (${drinkDetails[measure]}) `);
       }
     }
     return ingredients;
   };
-
   return (
     <>
       <img
         data-testid="recipe-photo"
-        src={ RecipeMeals.strMealThumb }
-        alt={ RecipeMeals.strMeal }
+        src={ drinkDetails.strDrinkThumb }
+        alt={ drinkDetails.strDrink }
       />
-      <h1 data-testid="recipe-title">{RecipeMeals.strMeal}</h1>
-      <h3 data-testid="recipe-category">{RecipeMeals.strCategory}</h3>
+      <h1 data-testid="recipe-title">{drinkDetails.strDrink}</h1>
+      <h3 data-testid="recipe-category">{drinkDetails.strAlcoholic}</h3>
       <ul>
         <h6>Ingredients:</h6>
         { rendIngredients().map((item, index) => (
@@ -57,6 +57,11 @@ function RecipeMealsDetails({ match }) {
           </li>
         ))}
       </ul>
+      <p data-testid="instructions">{drinkDetails.strInstructions}</p>
+    </>
+  );
+}
+RecipeDrinksDetails.propTypes = {
       <p data-testid="instructions">{RecipeMeals.strInstructions}</p>
       { embedURL(RecipeMeals.strYoutube)
         && <iframe
@@ -69,6 +74,14 @@ function RecipeMealsDetails({ match }) {
       <div>
         <CarouselDrinks />
       </div>
+      <button
+        data-testid="start-recipe-btn"
+        type="button"
+        name="startRecipe"
+        className="fixed-bottom"
+      >
+        Start Recipe
+      </button>
     </>
   );
 }
@@ -80,5 +93,6 @@ RecipeMealsDetails.propTypes = {
     }),
   }).isRequired,
 };
+export default RecipeDrinksDetails;
 
 export default RecipeMealsDetails;

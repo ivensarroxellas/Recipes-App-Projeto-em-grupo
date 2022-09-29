@@ -54,6 +54,14 @@ function RecipeDrinksDetails({ match }) {
       <div>
         <CarouselMeals />
       </div>
+      <button
+        data-testid="start-recipe-btn"
+        type="button"
+        name="startRecipe"
+        className="fixed-bottom"
+      >
+        Start Recipe
+      </button>
     </>
   );
 }

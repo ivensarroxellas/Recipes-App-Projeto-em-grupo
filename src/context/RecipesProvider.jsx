@@ -12,14 +12,14 @@ import { fetchMealsByIngredient,
   fetchInitialDrinks,
   fetchButtonMeals,
   fetchButtonDrinks,
+  fetchMealsCategory,
+  fetchDrinksCategory,
 } from '../service/fetch';
+
 import routValidator from '../service/routValidator';
+import slicer from '../service/slicer';
 
-const NUMBER_TO_SLICE = 12;
 const SLICER5 = 5;
-
-const slicer = (arr) => arr.slice(0, NUMBER_TO_SLICE);
-
 const slicer5 = (arr) => arr.slice(0, SLICER5);
 
 function RecipesProvider({ children }) {
@@ -30,19 +30,21 @@ function RecipesProvider({ children }) {
   const [initialDrinks, setInitialDrinks] = useState([]);
 
   const [filterButtons, setFilterButtons] = useState([]);
+  const [categoryFilter, setCategoryFilter] = useState([]);
+
+  const [filtredCategoryMeals, setFiltredCategoryMeals] = useState([]);
+  const [filtredCategoryDrinks, setFiltredCategoryDrinks] = useState([]);
 
   const [radioValue, setRadioValue] = useState('');
-  const [path, setPath] = useState('');
 
   const history = useHistory();
+  const { location: { pathname } } = history;
 
   useEffect(() => {
-    routValidator(path, filtredMeals, filtredDrinks, history);
+    routValidator(pathname, filtredMeals, filtredDrinks);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtredMeals, filtredDrinks]);
-
-  // console.log(initialMeals);
 
   useEffect(() => {
     const setInitialState = async () => {
@@ -51,23 +53,22 @@ function RecipesProvider({ children }) {
     };
     setInitialState();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [initialMeals, initialDrinks]);
 
   const handleFetchSearch = async (search) => {
-    console.log(search);
     switch (radioValue) {
     case 'ingredient':
-      if (path === '/meals') {
-        setFiltredMeals(slicer(await fetchMealsByIngredient(search)));
-      } else if (path === '/drinks') {
-        setFiltredDrinks(slicer(await fetchDrinksByIngredient(search)));
+      if (pathname === '/meals') {
+        setFiltredMeals(await fetchMealsByIngredient(search));
+      } else if (pathname === '/drinks') {
+        setFiltredDrinks(await fetchDrinksByIngredient(search));
       }
       break;
 
     case 'name':
-      if (path === '/meals') {
+      if (pathname === '/meals') {
         setFiltredMeals(slicer(await fetchMealsByName(search)));
-      } else if (path === '/drinks') {
+      } else if (pathname === '/drinks') {
         setFiltredDrinks(slicer(await fetchDrinksByName(search)));
       }
       break;
@@ -75,9 +76,9 @@ function RecipesProvider({ children }) {
     case 'firstLetter':
       if (search.length > 1) {
         global.alert('Your search must have only 1 (one) character');
-      } if (path === '/meals') {
+      } if (pathname === '/meals') {
         setFiltredMeals(slicer(await fetchMealsByFirstLetter(search)));
-      } if (path === '/drinks') {
+      } if (pathname === '/drinks') {
         setFiltredDrinks(slicer(await fetchDrinksByFirstLetter(search)));
       }
       break;
@@ -94,28 +95,50 @@ function RecipesProvider({ children }) {
   };
 
   const handleButtonFetch = () => {
-    if (path === '/meals') {
+    if (pathname === '/meals') {
       HandleButtonFetchMeals();
-    } else if (path === '/drinks') {
+    } else if (pathname === '/drinks') {
       HandleButtonFetchDrinks();
     }
   };
+  const handleCategoryMeals = async () => {
+    setFiltredCategoryMeals(await fetchMealsCategory(categoryFilter));
+  };
 
+  const handleCategoryDrinks = async () => {
+    setFiltredCategoryDrinks(await fetchDrinksCategory(categoryFilter));
+  };
+
+  useEffect(() => {
+    handleCategoryMeals();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryFilter]);
+
+  useEffect(() => {
+    handleCategoryDrinks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryFilter]);
+
+  // console.log(categoryFilter);
   const contextValue = {
+    categoryFilter,
     filtredMeals,
     filtredDrinks,
-    path,
     radioValue,
     initialMeals,
     initialDrinks,
     setRadioValue,
     handleFetchSearch,
-    setPath,
     setFiltredDrinks,
     HandleButtonFetchMeals,
     HandleButtonFetchDrinks,
     handleButtonFetch,
     filterButtons,
+    setCategoryFilter,
+    filtredCategoryMeals,
+    filtredCategoryDrinks,
+    pathname,
+
   };
   return (
     <RecipesContext.Provider value={ contextValue }>

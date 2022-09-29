@@ -7,7 +7,12 @@ import chickenMeals from '../../cypress/mocks/chickenMeals';
 
 const INPUT_SEARCHID = 'search-input';
 const BUTTON_SEARCHID = 'exec-search-btn';
+
 describe('Testando a SearchBar', () => {
+  global.fetch = jest.fn(() => Promise.resolve({
+    json: () => Promise.resolve(chickenMeals),
+  }));
+
   beforeEach(() => {
     renderWithRouter(<App />, ['/meals']);
 
@@ -28,9 +33,8 @@ describe('Testando a SearchBar', () => {
     userEvent.type(inputSearch, 'Chicken');
     userEvent.click(btnSearch);
 
-    global.fetch = jest.fn(() => Promise.resolve({
-      json: () => Promise.resolve(chickenMeals),
-    }));
+    const recipeText = screen.getByRole('heading, {name: /Brown Stew Chiken/i}');
+    expect(recipeText).toBeInTheDocument();
   });
 
   test('Ao clicar na "lupa", a "searchBar", não deve estar mais na tela', () => {

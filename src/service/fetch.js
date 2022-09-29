@@ -1,15 +1,22 @@
+import slicer from './slicer';
+
+const dataVerify = (arr) => {
+  if (arr === null) {
+    global.alert('Sorry, we haven\'t found any recipes for these filters.');
+  } return arr;
+};
 export const fetchMealsByIngredient = async (search) => {
   const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${search}`);
   const { meals } = await response.json();
   return meals;
 };
-
+fetchMealsByIngredient();
 export const fetchMealsByName = async (search) => {
   const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${search}`);
   const { meals } = await response.json();
 
   if (meals === null) {
-    global.alert('Sorry, we haven\'t found any recipes for these filters.');
+    dataVerify();
     const result = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
     const data = await result.json();
     return data.meals;
@@ -38,7 +45,7 @@ export const fetchDrinksByName = async (search) => {
   const { drinks } = await response.json();
 
   if (drinks === null) {
-    global.alert('Sorry, we haven\'t found any recipes for these filters.');
+    dataVerify();
     const result = await fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
     const data = await result.json();
     return data.drinks;
@@ -94,3 +101,25 @@ export const fetchDrinkRecipeById = async (id) => {
   const { drinks } = await response.json();
   return drinks;
 };
+
+// FETCH POR CATEGORY ---------------------------
+
+export const fetchMealsCategory = async (category) => {
+  const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${category}`);
+  const { meals } = await response.json();
+
+  return slicer(meals);
+};
+
+export const fetchDrinksCategory = async (category) => {
+  const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${category}`);
+  const { drinks } = await response.json();
+
+  return slicer(drinks);
+};
+
+// if (drinks === null) {
+//   global.alert('Sorry, we haven\'t found any recipes for these filters.');
+//   const result = await fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
+//   const data = await result.json();
+//   return data.drinks;

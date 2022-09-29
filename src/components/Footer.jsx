@@ -1,18 +1,35 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import imageDrink from '../images/drinkIcon.svg';
 import imageMeals from '../images/mealIcon.svg';
 import '../styles/components/Footer.css';
+import RecipesContext from '../context/RecipesContext';
 
 function Footer() {
+  const { initialMeals,
+    initialDrinks,
+    pathname, setInitialDrinks } = useContext(RecipesContext);
+
+  // const handleChangePage = () => {
+  //   if (pathname === '/meals') {
+  //     setInitialMeals(initialMeals);
+  //   } if (pathname === '/drinks') {
+  //     setInitialDrinks(initialDrinks);
+  //   }
+  // };
+
   return (
     <footer data-testid="footer" className="fixed-bottom">
       <div className="container-footer">
-        <Link to="/drinks">
+        <Link
+          to="/drinks"
+
+        >
           <img
             src={ imageDrink }
             alt="imagem de bebida"
             data-testid="drinks-bottom-btn"
+
           />
         </Link>
         <Link to="/meals">
@@ -20,6 +37,7 @@ function Footer() {
             src={ imageMeals }
             alt="imagem de comida"
             data-testid="meals-bottom-btn"
+
           />
         </Link>
       </div>
