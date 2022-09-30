@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import copy from 'clipboard-copy';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import CarouselMeals from '../components/CarouselMeals';
@@ -6,6 +7,7 @@ import CarouselMeals from '../components/CarouselMeals';
 // Auxílio Luiz Filipe
 function RecipeDrinksDetails({ match }) {
   const [RecipeDrinks, setRecipeDrinks] = useState({});
+  const [shareCopyRender, setShareCopyRender] = useState(false);
   const { params: { id } } = match;
   let renderButton = '';
   const history = useHistory();
@@ -18,6 +20,11 @@ function RecipeDrinksDetails({ match }) {
     };
     fetchDrink();
   }, [id]);
+
+  function handleClickShareBtn() {
+    setShareCopyRender(true);
+    copy(`http://localhost:3000${window.location.pathname}`);
+  }
 
   const recipesInProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
 
@@ -53,9 +60,11 @@ function RecipeDrinksDetails({ match }) {
       <button
         type="button"
         data-testid="share-btn"
+        onClick={ handleClickShareBtn }
       >
         Compartilhar Receita
       </button>
+      {shareCopyRender && <h4>Link copied!</h4>}
       <button
         type="button"
         data-testid="favorite-btn"
