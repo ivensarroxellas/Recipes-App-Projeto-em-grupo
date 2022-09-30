@@ -8,13 +8,6 @@ import SearchBar from './SearchBar';
 
 function Header() {
   const [renderSearchBar, setSearchBar] = useState(false);
-  const { setPath } = useContext(RecipesContext);
-
-  const history = useHistory();
-
-  const { location: { pathname } } = history;
-
-  setPath(pathname);
 
   const showSearchBar = () => {
     if (renderSearchBar) {

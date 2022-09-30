@@ -13,7 +13,7 @@ function FilterButton() {
 
   return (
     <div className="div-filterButton">
-      {filterButtons.map((f, index) => (
+      {/* {filterButtons.map((f, index) => (
         <div
           key={ index }
         >
@@ -24,7 +24,7 @@ function FilterButton() {
             {f.strCategory}
           </button>
         </div>
-      ))}
+      ))} */}
     </div>
   );
 }

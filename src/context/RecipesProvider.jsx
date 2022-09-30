@@ -10,18 +10,13 @@ import { fetchMealsByIngredient,
   fetchDrinksByName,
   fetchInitialMeals,
   fetchInitialDrinks,
-  fetchButtonMeals,
-  fetchButtonDrinks,
-  fetchDrinkDetails,
+  // fetchButtonMeals,
+  // fetchButtonDrinks,
+  fetchMealsCategory,
+  fetchDrinksCategory,
 } from '../service/fetch';
-import routValidator from '../service/routValidator';
-
-const NUMBER_TO_SLICE = 12;
-const SLICER5 = 5;
-
-const slicer = (arr) => arr.slice(0, NUMBER_TO_SLICE);
-
-const slicer5 = (arr) => arr.slice(0, SLICER5);
+import { slicer } from '../service/slicer';
+// import slicer, { slice5 } from '../service/slicer';
 
 function RecipesProvider({ children }) {
   const [filtredMeals, setFiltredMeals] = useState([]);
@@ -30,23 +25,17 @@ function RecipesProvider({ children }) {
   const [filtredDrinks, setFiltredDrinks] = useState([]);
   const [initialDrinks, setInitialDrinks] = useState([]);
 
-  const [filterButtons, setFilterButtons] = useState([]);
+  const [categoryFilter, setCategoryFilter] = useState([]);
+
+  const [filtredCategoryMeals, setFiltredCategoryMeals] = useState([]);
+  const [filtredCategoryDrinks, setFiltredCategoryDrinks] = useState([]);
 
   const [radioValue, setRadioValue] = useState('');
-  const [path, setPath] = useState('');
-
-  const [mealsDetails, setMealsDetails] = useState({});
-  const [drinkDetails, setDrinkDetails] = useState({});
 
   const history = useHistory();
+  const { location: { pathname } } = history;
 
-  useEffect(() => {
-    routValidator(path, filtredMeals, filtredDrinks, history);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filtredMeals, filtredDrinks]);
-
-  // console.log(initialMeals);
+  console.log(categoryFilter);
 
   useEffect(() => {
     const setInitialState = async () => {
@@ -55,75 +44,77 @@ function RecipesProvider({ children }) {
     };
     setInitialState();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [filtredCategoryMeals, filtredCategoryDrinks]);
 
   const handleFetchSearch = async (search) => {
     switch (radioValue) {
     case 'ingredient':
-      if (path === '/meals') {
-        setFiltredMeals(slicer(await fetchMealsByIngredient(search)));
-      } else if (path === '/drinks') {
-        setFiltredDrinks(slicer(await fetchDrinksByIngredient(search)));
+      if (pathname === '/meals') {
+        setFiltredMeals(await fetchMealsByIngredient(search));
+      } else if (pathname === '/drinks') {
+        setFiltredDrinks(await fetchDrinksByIngredient(search));
       }
       break;
 
     case 'name':
-      if (path === '/meals') {
-        setFiltredMeals(slicer(await fetchMealsByName(search)));
-      } else if (path === '/drinks') {
-        setFiltredDrinks(slicer(await fetchDrinksByName(search)));
+      if (pathname === '/meals') {
+        setFiltredMeals(await fetchMealsByName(search));
+      } else if (pathname === '/drinks') {
+        setFiltredDrinks(await fetchDrinksByName(search));
       }
       break;
 
     case 'firstLetter':
       if (search.length > 1) {
         global.alert('Your search must have only 1 (one) character');
-      } if (path === '/meals') {
-        setFiltredMeals(slicer(await fetchMealsByFirstLetter(search)));
-      } if (path === '/drinks') {
-        setFiltredDrinks(slicer(await fetchDrinksByFirstLetter(search)));
+      } if (pathname === '/meals') {
+        setFiltredMeals(await fetchMealsByFirstLetter(search));
+      } if (pathname === '/drinks') {
+        setFiltredDrinks(await fetchDrinksByFirstLetter(search));
       }
       break;
     default: return null;
     }
   };
-  const handleFetchDetails = async (id) => {
-    setDrinkDetails(await fetchDrinkDetails(id));
+
+  // console.log(filterButtons);
+
+  const handleCategoryMeals = async () => {
+    setFiltredCategoryMeals(await fetchMealsCategory(categoryFilter));
   };
 
-  const HandleButtonFetchMeals = async () => {
-    setFilterButtons(slicer5(await fetchButtonMeals()));
+  const handleCategoryDrinks = async () => {
+    setFiltredCategoryDrinks(await fetchDrinksCategory(categoryFilter));
   };
 
-  const HandleButtonFetchDrinks = async () => {
-    setFilterButtons(slicer5(await fetchButtonDrinks()));
-  };
+  // console.log(filterButtons);
 
-  const handleButtonFetch = () => {
-    if (path === '/meals') {
-      HandleButtonFetchMeals();
-    } else if (path === '/drinks') {
-      HandleButtonFetchDrinks();
-    }
-  };
+  useEffect(() => {
+    handleCategoryMeals();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryFilter]);
 
+  useEffect(() => {
+    handleCategoryDrinks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryFilter]);
+
+  // console.log(categoryFilter);
   const contextValue = {
+    categoryFilter,
     filtredMeals,
     filtredDrinks,
-    path,
     radioValue,
     initialMeals,
     initialDrinks,
-    drinkDetails,
     setRadioValue,
     handleFetchSearch,
-    setPath,
     setFiltredDrinks,
-    HandleButtonFetchMeals,
-    HandleButtonFetchDrinks,
-    handleButtonFetch,
-    handleFetchDetails,
-    filterButtons,
+    setCategoryFilter,
+    filtredCategoryMeals,
+    filtredCategoryDrinks,
+    pathname,
+    setFiltredCategoryMeals,
   };
   return (
     <RecipesContext.Provider value={ contextValue }>
