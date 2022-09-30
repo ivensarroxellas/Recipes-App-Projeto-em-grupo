@@ -50,6 +50,18 @@ function RecipeDrinksDetails({ match }) {
       />
       <h1 data-testid="recipe-title">{RecipeDrinks.strDrink}</h1>
       <h3 data-testid="recipe-category">{RecipeDrinks.strAlcoholic}</h3>
+      <button
+        type="button"
+        data-testid="share-btn"
+      >
+        Compartilhar Receita
+      </button>
+      <button
+        type="button"
+        data-testid="favorite-btn"
+      >
+        Favoritar Receita
+      </button>
       <ul>
         <h6>Ingredients:</h6>
         { rendIngredients().map((item, index) => (
