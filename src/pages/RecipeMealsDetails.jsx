@@ -34,7 +34,7 @@ function RecipeMealsDetails({ match }) {
   }
 
   const recipesInProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
-  
+
   const NameButton = !recipesInProgress ? 'Start Recipe' : 'Continue Recipe';
 
   const doneRecipesOnLocal = JSON.parse(localStorage.getItem('doneRecipes'));
