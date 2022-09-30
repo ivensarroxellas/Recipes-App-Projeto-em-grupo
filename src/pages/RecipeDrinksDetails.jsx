@@ -27,8 +27,7 @@ function RecipeDrinksDetails({ match }) {
   }
 
   const recipesInProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
-
-  const NameBtn = !recipesInProgress ? 'Start Recipe' : 'Continue Recipe';
+  const NameButton = !recipesInProgress ? 'Start Recipe' : 'Continue Recipe';
 
   const doneRecipesOnLocal = JSON.parse(localStorage.getItem('doneRecipes'));
   if (doneRecipesOnLocal !== null) {
@@ -95,7 +94,7 @@ function RecipeDrinksDetails({ match }) {
           className="fixed-bottom"
           onClick={ () => history.push(`/drinks/${id}/in-progress`) }
         >
-          {NameBtn}
+          {NameButton}
         </button>)}
     </>
   );
