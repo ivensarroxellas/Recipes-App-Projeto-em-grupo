@@ -3,16 +3,13 @@ import copy from 'clipboard-copy';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import CarouselDrinks from '../components/CarouselDrinks';
-
 // Auxílio Luiz Filipe
 function RecipeMealsDetails({ match }) {
-  // const { isRecipeDone, setIsRecipeDone } = useContext(RecipesContext);
   const [RecipeMeals, setRecipeMeals] = useState({});
   const [shareCopyRender, setShareCopyRender] = useState(false);
   const { params: { id } } = match;
   let renderButton = '';
   const history = useHistory();
-
   const embedURL = (url) => {
     if (url) {
       const URL = url;
@@ -20,39 +17,24 @@ function RecipeMealsDetails({ match }) {
       return newURL;
     }
   };
-
   useEffect(() => {
     const fetchMeal = async () => {
       const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
       const data = await response.json();
       setRecipeMeals(data.meals[0]);
     };
-    const setLocalStorageManually = () => {
-      localStorage.setItem('doneRecipes', JSON.stringify([testObject]));
-      console.log(localStorage.getItem('doneRecipes'));
-    };
-    // const checkLocalStorage = () => {
-    //   setIsRecipeDone(JSON.parse(localStorage.getItem('doneRecipes'))?.some((recipe) => (
-    //     recipe.name === RecipeMeals.strMeal)));
-    // };
     fetchMeal();
-    setLocalStorageManually();
-    // checkLocalStorage();
   }, [id]);
-
   function handleClickShareBtn() {
     setShareCopyRender(true);
     copy(`http://localhost:3000${window.location.pathname}`);
   }
-
   const recipesInProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
   const NameButton = !recipesInProgress ? 'Start Recipe' : 'Continue Recipe';
-
   const doneRecipesOnLocal = JSON.parse(localStorage.getItem('doneRecipes'));
   if (doneRecipesOnLocal !== null) {
     renderButton = doneRecipesOnLocal.some((recipe) => recipe.id !== id);
   }
-
   const rendIngredients = () => {
     const ingredients = [];
     const NUMBER_QUINZE = 15;
@@ -65,21 +47,6 @@ function RecipeMealsDetails({ match }) {
     }
     return ingredients;
   };
-
-  // let buttonDisapear = false;
-  // const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
-  // if (doneRecipes !== null) {
-  //   buttonDisapear = doneRecipes.some((recipe) => recipe.name !== RecipeMeals.strMeal);
-  // }
-
-  // let buttonContinue = false;
-  // const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
-  // if (inProgressRecipes !== null) {
-  //   buttonContinue = Object.keys(inProgressRecipes.meals).some(
-  //     (recipeId) => recipeId === RecipeMeals.idMeal,
-  //   );
-  // }
-
   return (
     <>
       <img
@@ -122,7 +89,6 @@ function RecipeMealsDetails({ match }) {
           allowFullScreen
           data-testid="video"
         />}
-
       <div>
         <CarouselDrinks />
       </div>
@@ -139,7 +105,6 @@ function RecipeMealsDetails({ match }) {
     </>
   );
 }
-
 RecipeMealsDetails.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -147,5 +112,4 @@ RecipeMealsDetails.propTypes = {
     }),
   }).isRequired,
 };
-
 export default RecipeMealsDetails;
