@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import CarouselDrinks from '../components/CarouselDrinks';
 
@@ -7,6 +8,7 @@ function RecipeMealsDetails({ match }) {
   const [RecipeMeals, setRecipeMeals] = useState({});
   const { params: { id } } = match;
   let renderButton = '';
+  const history = useHistory();
 
   const embedURL = (url) => {
     if (url) {
@@ -15,7 +17,6 @@ function RecipeMealsDetails({ match }) {
       return newURL;
     }
   };
-
   useEffect(() => {
     const fetchMeal = async () => {
       const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
@@ -85,6 +86,7 @@ function RecipeMealsDetails({ match }) {
           type="button"
           name="startRecipe"
           className="fixed-bottom position-fixed"
+          onClick={ () => history.push(`/meals/${id}/in-progress`) }
         >
           {NameBtn}
         </button>)}

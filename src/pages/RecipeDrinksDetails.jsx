@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import CarouselMeals from '../components/CarouselMeals';
 
@@ -7,6 +8,7 @@ function RecipeDrinksDetails({ match }) {
   const [RecipeDrinks, setRecipeDrinks] = useState({});
   const { params: { id } } = match;
   let renderButton = '';
+  const history = useHistory();
 
   useEffect(() => {
     const fetchDrink = async () => {
@@ -70,6 +72,7 @@ function RecipeDrinksDetails({ match }) {
           type="button"
           name="startRecipe"
           className="fixed-bottom"
+          onClick={ () => history.push(`/drinks/${id}/in-progress`) }
         >
           {NameBtn}
         </button>)}
