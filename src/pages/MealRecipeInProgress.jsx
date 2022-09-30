@@ -21,7 +21,6 @@ function MealRecipeInProgress() {
 
   return (
     <div>
-      {console.log(mealDetails.meals)}
       {renderPermission && (
         mealDetails.meals.map((elem, index) => (
           <div key={ index }>
