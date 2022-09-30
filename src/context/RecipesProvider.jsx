@@ -41,7 +41,7 @@ function RecipesProvider({ children }) {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtredMeals, filtredDrinks]);
-
+  // agit
   useEffect(() => {
     const setInitialState = async () => {
       setInitialMeals(slicer(await fetchInitialMeals()));
