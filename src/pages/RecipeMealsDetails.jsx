@@ -25,6 +25,10 @@ function RecipeMealsDetails({ match }) {
     fetchMeal();
   }, [id]);
 
+  const recipesInProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
+
+  const NameBtn = !recipesInProgress ? 'Start Recipe' : 'Continue Recipe';
+
   const doneRecipesOnLocal = JSON.parse(localStorage.getItem('doneRecipes'));
   if (doneRecipesOnLocal !== null) {
     renderButton = doneRecipesOnLocal.some((recipe) => recipe.id !== id);
@@ -82,7 +86,7 @@ function RecipeMealsDetails({ match }) {
           name="startRecipe"
           className="fixed-bottom position-fixed"
         >
-          Start Recipe
+          {NameBtn}
         </button>)}
     </>
   );
