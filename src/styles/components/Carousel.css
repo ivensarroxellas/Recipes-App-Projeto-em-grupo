@@ -1,0 +1,94 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* body {
+  align-items: center;
+  background-color: #e1e1e1;
+  color: #1e1e1e;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+} */
+
+.container {
+  max-width: 75vw;
+}
+
+.container .carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+.container .carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.container .carousel .item {
+  background-color: white;
+  border-radius: 16px;
+  margin: 20px;
+  padding: 20px;
+  width: 280px;
+}
+
+.carousel .item .image img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.container .carousel .item .info {
+  display: flex;
+  flex-direction: column;
+  height: 140px;
+  justify-content: space-between;
+}
+
+.carousel .item .info span {
+  border-radius: 10px;
+  color: #1e1e1e;
+  display: block;
+  padding: 5px;
+  text-align: center;
+}
+
+.carousel .item .info .name {
+  color: #00a8fb;
+  font-size: 1.2rem;
+  font-weight: 900;
+  margin: 10px 0;
+}
+
+.carousel .item .info .oldPrice {
+  color: #e81a5d;
+  flex-grow: 1;
+  font-size: 0.8rem;
+  text-decoration: line-through;
+}
+
+.carousel .item .info .price {
+  background-color: #ff7e3b;
+  font-size: 1.2rem;
+  font-weight: 900;
+  margin-top: 10px;
+}
+
+.container .buttons {
+  text-align: center;
+  width: 100%;
+}
+
+.container .buttons button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.container .buttons button:first-child img {
+  transform: rotate(180deg);
+}

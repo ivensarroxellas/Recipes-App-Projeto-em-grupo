@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-// import RecipesContext from '../context/RecipesContext';
+import CarouselDrinks from '../components/CarouselDrinks';
 
 // Auxílio Luiz Filipe
 function RecipeMealsDetails({ match }) {
   // const { isRecipeDone, setIsRecipeDone } = useContext(RecipesContext);
   const [RecipeMeals, setRecipeMeals] = useState({});
   const { params: { id } } = match;
+  let renderButton = '';
 
   const embedURL = (url) => {
     if (url) {
@@ -47,9 +48,14 @@ function RecipeMealsDetails({ match }) {
     // checkLocalStorage();
   }, [id]);
 
+  const doneRecipesOnLocal = JSON.parse(localStorage.getItem('doneRecipes'));
+  if (doneRecipesOnLocal !== null) {
+    renderButton = doneRecipesOnLocal.some((recipe) => recipe.id !== id);
+  }
+
   const rendIngredients = () => {
     const ingredients = [];
-    const NUMBER_QUINZE = 20;
+    const NUMBER_QUINZE = 15;
     for (let index = 0; index <= NUMBER_QUINZE; index += 1) {
       const ingredient = `strIngredient${index}`;
       const measure = `strMeasure${index}`;
@@ -60,19 +66,19 @@ function RecipeMealsDetails({ match }) {
     return ingredients;
   };
 
-  let buttonDisapear = false;
-  const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
-  if (doneRecipes !== null) {
-    buttonDisapear = doneRecipes.some((recipe) => recipe.name !== RecipeMeals.strMeal);
-  }
+  // let buttonDisapear = false;
+  // const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
+  // if (doneRecipes !== null) {
+  //   buttonDisapear = doneRecipes.some((recipe) => recipe.name !== RecipeMeals.strMeal);
+  // }
 
-  let buttonContinue = false;
-  const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
-  if (inProgressRecipes !== null) {
-    buttonContinue = Object.keys(inProgressRecipes.meals).some(
-      (recipeId) => recipeId === RecipeMeals.idMeal,
-    );
-  }
+  // let buttonContinue = false;
+  // const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+  // if (inProgressRecipes !== null) {
+  //   buttonContinue = Object.keys(inProgressRecipes.meals).some(
+  //     (recipeId) => recipeId === RecipeMeals.idMeal,
+  //   );
+  // }
 
   return (
     <>
@@ -102,17 +108,19 @@ function RecipeMealsDetails({ match }) {
           allowFullScreen
           data-testid="video"
         />}
-      {buttonDisapear
-           && (
-             <button
-               data-testid="start-recipe-btn"
-               type="button"
-               name="startRecipe"
-               className="fixed-bottom"
-             >
-               { buttonContinue ? 'Continue Recipe' : 'Start Recipe' }
-             </button>
-           )}
+
+      <div>
+        <CarouselDrinks />
+      </div>
+      {renderButton === '' && (
+        <button
+          data-testid="start-recipe-btn"
+          type="button"
+          name="startRecipe"
+          className="fixed-bottom position-fixed"
+        >
+          Start Recipe
+        </button>)}
     </>
   );
 }
