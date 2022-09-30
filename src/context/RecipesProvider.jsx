@@ -95,6 +95,8 @@ function RecipesProvider({ children }) {
     }
   };
 
+  // fetchcategoryButtons---------------------------------
+
   useEffect(() => {
     handleFetchCategory();
     // eslint-disable-next-line react-hooks/exhaustive-deps
