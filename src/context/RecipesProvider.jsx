@@ -15,36 +15,41 @@ import { fetchMealsByIngredient,
   fetchMealsCategory,
   fetchDrinksCategory,
 } from '../service/fetch';
-import { slicer } from '../service/slicer';
+
 // import slicer, { slice5 } from '../service/slicer';
 
 function RecipesProvider({ children }) {
   const [filtredMeals, setFiltredMeals] = useState([]);
-  const [initialMeals, setInitialMeals] = useState([]);
-
   const [filtredDrinks, setFiltredDrinks] = useState([]);
+  // -- barra de busca
+
+  const [initialMeals, setInitialMeals] = useState([]);
   const [initialDrinks, setInitialDrinks] = useState([]);
+  // -- os 12 primeiros
 
   const [categoryFilter, setCategoryFilter] = useState([]);
+  // -- valor do botão de category--
 
   const [filtredCategoryMeals, setFiltredCategoryMeals] = useState([]);
   const [filtredCategoryDrinks, setFiltredCategoryDrinks] = useState([]);
+  // -- valor filtrado pelo botão
 
   const [radioValue, setRadioValue] = useState('');
+  // - radio da barra de pesquisa --
 
   const history = useHistory();
   const { location: { pathname } } = history;
 
-  console.log(categoryFilter);
+  console.log(filtredCategoryDrinks);
 
   useEffect(() => {
     const setInitialState = async () => {
-      setInitialMeals(slicer(await fetchInitialMeals()));
-      setInitialDrinks(slicer(await fetchInitialDrinks()));
+      setInitialMeals(await fetchInitialMeals());
+      setInitialDrinks(await fetchInitialDrinks());
     };
     setInitialState();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filtredCategoryMeals, filtredCategoryDrinks]);
+  }, []);
 
   const handleFetchSearch = async (search) => {
     switch (radioValue) {
@@ -77,29 +82,24 @@ function RecipesProvider({ children }) {
     }
   };
 
-  // console.log(filterButtons);
+  const handleFetchCategory = async () => {
+    const categoryMeals = ['Beef', 'Breakfast', 'Chicken', 'Dessert', 'Goat'];
+    const categoryDrinks = ['Ordinary Drink', 'Cocktail',
+      'Shake', 'Other/Unknown', 'Cocoa'];
+    const categoryVerificator = (arr, word) => arr.some((category) => category === word);
 
-  const handleCategoryMeals = async () => {
-    setFiltredCategoryMeals(await fetchMealsCategory(categoryFilter));
+    if (categoryVerificator(categoryMeals, categoryFilter)) {
+      return setFiltredCategoryMeals(await fetchMealsCategory(categoryFilter));
+    } if (categoryVerificator(categoryDrinks, categoryFilter)) {
+      return setFiltredCategoryDrinks(await fetchDrinksCategory(categoryFilter));
+    }
   };
-
-  const handleCategoryDrinks = async () => {
-    setFiltredCategoryDrinks(await fetchDrinksCategory(categoryFilter));
-  };
-
-  // console.log(filterButtons);
 
   useEffect(() => {
-    handleCategoryMeals();
+    handleFetchCategory();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryFilter]);
 
-  useEffect(() => {
-    handleCategoryDrinks();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryFilter]);
-
-  // console.log(categoryFilter);
   const contextValue = {
     categoryFilter,
     filtredMeals,
@@ -115,6 +115,7 @@ function RecipesProvider({ children }) {
     filtredCategoryDrinks,
     pathname,
     setFiltredCategoryMeals,
+    setFiltredCategoryDrinks,
   };
   return (
     <RecipesContext.Provider value={ contextValue }>

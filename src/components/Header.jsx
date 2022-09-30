@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import RecipesContext from '../context/RecipesContext';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+
 import imageProfile from '../images/profileIcon.svg';
 import imageSearch from '../images/searchIcon.svg';
 import FilterButton from './FilterButton';
