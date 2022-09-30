@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+// import RecipesContext from '../context/RecipesContext';
 
 // Auxílio Luiz Filipe
 function RecipeMealsDetails({ match }) {
+  // const { isRecipeDone, setIsRecipeDone } = useContext(RecipesContext);
   const [RecipeMeals, setRecipeMeals] = useState({});
   const { params: { id } } = match;
 
@@ -14,13 +16,35 @@ function RecipeMealsDetails({ match }) {
     }
   };
 
+  const testObject = {
+    id: 0,
+    type: '',
+    nationality: '',
+    category: '',
+    alcoholicOrNot: '',
+    name: 'Burek',
+    image: '',
+    doneDate: '',
+    tags: [],
+  };
+
   useEffect(() => {
     const fetchMeal = async () => {
       const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
       const data = await response.json();
       setRecipeMeals(data.meals[0]);
     };
+    const setLocalStorageManually = () => {
+      localStorage.setItem('doneRecipes', JSON.stringify([testObject]));
+      console.log(localStorage.getItem('doneRecipes'));
+    };
+    // const checkLocalStorage = () => {
+    //   setIsRecipeDone(JSON.parse(localStorage.getItem('doneRecipes'))?.some((recipe) => (
+    //     recipe.name === RecipeMeals.strMeal)));
+    // };
     fetchMeal();
+    setLocalStorageManually();
+    // checkLocalStorage();
   }, [id]);
 
   const rendIngredients = () => {
@@ -35,6 +59,20 @@ function RecipeMealsDetails({ match }) {
     }
     return ingredients;
   };
+
+  let buttonDisapear = false;
+  const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
+  if (doneRecipes !== null) {
+    buttonDisapear = doneRecipes.some((recipe) => recipe.name !== RecipeMeals.strMeal);
+  }
+
+  let buttonContinue = false;
+  const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+  if (inProgressRecipes !== null) {
+    buttonContinue = Object.keys(inProgressRecipes.meals).some(
+      (recipeId) => recipeId === RecipeMeals.idMeal,
+    );
+  }
 
   return (
     <>
@@ -64,14 +102,17 @@ function RecipeMealsDetails({ match }) {
           allowFullScreen
           data-testid="video"
         />}
-      <button
-        data-testid="start-recipe-btn"
-        type="button"
-        name="startRecipe"
-        className="fixed-bottom"
-      >
-        Start Recipe
-      </button>
+      {buttonDisapear
+           && (
+             <button
+               data-testid="start-recipe-btn"
+               type="button"
+               name="startRecipe"
+               className="fixed-bottom"
+             >
+               { buttonContinue ? 'Continue Recipe' : 'Start Recipe' }
+             </button>
+           )}
     </>
   );
 }

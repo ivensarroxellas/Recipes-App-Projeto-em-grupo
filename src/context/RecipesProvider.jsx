@@ -34,6 +34,8 @@ function RecipesProvider({ children }) {
   const [radioValue, setRadioValue] = useState('');
   const [path, setPath] = useState('');
 
+  const [isRecipeDone, setIsRecipeDone] = useState(true);
+
   const history = useHistory();
 
   useEffect(() => {
@@ -108,6 +110,7 @@ function RecipesProvider({ children }) {
     radioValue,
     initialMeals,
     initialDrinks,
+    isRecipeDone,
     setRadioValue,
     handleFetchSearch,
     setPath,
@@ -116,6 +119,7 @@ function RecipesProvider({ children }) {
     HandleButtonFetchDrinks,
     handleButtonFetch,
     filterButtons,
+    setIsRecipeDone,
   };
   return (
     <RecipesContext.Provider value={ contextValue }>
