@@ -6,7 +6,7 @@ describe('', () => {
   it('', () => {
     render(<RecipesDetails />);
 
-    const element = screen.getByText('RecipesDetails');
+    const element = screen.getByTestId('coxinha');
     expect(element).toBeInTheDocument();
   });
 });
