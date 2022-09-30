@@ -17,6 +17,7 @@ function MealRecipeInProgress() {
     if (window.location.pathname.includes('/meals')) {
       fetchMealsDetails(id);
     }
+    // eslint-disable-next-line
   }, []);
 
   return (
