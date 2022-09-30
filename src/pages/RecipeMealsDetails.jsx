@@ -6,6 +6,7 @@ import CarouselDrinks from '../components/CarouselDrinks';
 function RecipeMealsDetails({ match }) {
   const [RecipeMeals, setRecipeMeals] = useState({});
   const { params: { id } } = match;
+  let renderButton = '';
 
   const embedURL = (url) => {
     if (url) {
@@ -24,9 +25,14 @@ function RecipeMealsDetails({ match }) {
     fetchMeal();
   }, [id]);
 
+  const doneRecipesOnLocal = JSON.parse(localStorage.getItem('doneRecipes'));
+  if (doneRecipesOnLocal !== null) {
+    renderButton = doneRecipesOnLocal.some((recipe) => recipe.id !== id);
+  }
+
   const rendIngredients = () => {
     const ingredients = [];
-    const NUMBER_QUINZE = 20;
+    const NUMBER_QUINZE = 15;
     for (let index = 0; index <= NUMBER_QUINZE; index += 1) {
       const ingredient = `strIngredient${index}`;
       const measure = `strMeasure${index}`;
@@ -69,14 +75,15 @@ function RecipeMealsDetails({ match }) {
       <div>
         <CarouselDrinks />
       </div>
-      <button
-        data-testid="start-recipe-btn"
-        type="button"
-        name="startRecipe"
-        className="fixed-bottom"
-      >
-        Start Recipe
-      </button>
+      {renderButton === '' && (
+        <button
+          data-testid="start-recipe-btn"
+          type="button"
+          name="startRecipe"
+          className="fixed-bottom position-fixed"
+        >
+          Start Recipe
+        </button>)}
     </>
   );
 }
