@@ -19,7 +19,8 @@ function CarouselDrinks() {
       }
     };
     fetchDrinksRecomended();
-  }, []); // eslint-disable-line
+    // eslint-disable-next-line
+  }, []);
 
   const handleLeftClick = (e) => {
     e.preventDefault();
