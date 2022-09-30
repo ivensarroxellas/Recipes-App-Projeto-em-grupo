@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import CarouselDrinks from '../components/CarouselDrinks';
 
@@ -8,6 +9,7 @@ function RecipeMealsDetails({ match }) {
   const [RecipeMeals, setRecipeMeals] = useState({});
   const { params: { id } } = match;
   let renderButton = '';
+  const history = useHistory();
 
   const embedURL = (url) => {
     if (url) {
@@ -15,18 +17,6 @@ function RecipeMealsDetails({ match }) {
       const newURL = URL.replace('watch?v=', 'embed/');
       return newURL;
     }
-  };
-
-  const testObject = {
-    id: 0,
-    type: '',
-    nationality: '',
-    category: '',
-    alcoholicOrNot: '',
-    name: 'Burek',
-    image: '',
-    doneDate: '',
-    tags: [],
   };
 
   useEffect(() => {
@@ -122,6 +112,7 @@ function RecipeMealsDetails({ match }) {
           type="button"
           name="startRecipe"
           className="fixed-bottom position-fixed"
+          onClick={ () => history.push(`/meals/${id}/in-progress`) }
         >
           {NameBtn}
         </button>)}
