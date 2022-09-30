@@ -12,6 +12,7 @@ import { fetchMealsByIngredient,
   fetchInitialDrinks,
   fetchButtonMeals,
   fetchButtonDrinks,
+  fetchDrinkDetails,
 } from '../service/fetch';
 import routValidator from '../service/routValidator';
 
@@ -30,6 +31,7 @@ function RecipesProvider({ children }) {
   const [initialDrinks, setInitialDrinks] = useState([]);
 
   const [filterButtons, setFilterButtons] = useState([]);
+  const [drinkDetails, setDrinkDetails] = useState({});
 
   const [radioValue, setRadioValue] = useState('');
   const [path, setPath] = useState('');
@@ -86,6 +88,10 @@ function RecipesProvider({ children }) {
     }
   };
 
+  const handleFetchDetails = async (id) => {
+    setDrinkDetails(await fetchDrinkDetails(id));
+  };
+
   const HandleButtonFetchMeals = async () => {
     setFilterButtons(slicer5(await fetchButtonMeals()));
   };
@@ -118,6 +124,7 @@ function RecipesProvider({ children }) {
     HandleButtonFetchDrinks,
     handleButtonFetch,
     handleFetchDetails,
+    drinkDetails,
     filterButtons,
     setIsRecipeDone,
   };

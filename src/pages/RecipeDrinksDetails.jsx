@@ -7,6 +7,7 @@ function RecipeDrinksDetails({ match }) {
   const [RecipeDrinks, setRecipeDrinks] = useState({});
   const { params: { id } } = match;
   let renderButton = '';
+  let renderContinue = '';
 
   useEffect(() => {
     const fetchDrink = async () => {
@@ -16,6 +17,13 @@ function RecipeDrinksDetails({ match }) {
     };
     fetchDrink();
   }, [id]);
+
+  const recipesProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
+  if (recipesProgress !== null) {
+    const { drinks } = inProgressRecipes;
+    renderContinue = Object.keys(drinks).some((recipe) => recipe === id);
+  }
+  const NameBtn = !renderContinue ? 'Start Recipe' : 'Continue Recipe';
 
   const doneRecipesOnLocal = JSON.parse(localStorage.getItem('doneRecipes'));
   if (doneRecipesOnLocal !== null) {
@@ -67,7 +75,7 @@ function RecipeDrinksDetails({ match }) {
           name="startRecipe"
           className="fixed-bottom"
         >
-          Start Recipe
+          {NameBtn}
         </button>)}
     </>
   );
