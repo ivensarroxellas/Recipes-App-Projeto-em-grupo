@@ -1,3 +1,5 @@
+const MAGIC_NUMBER = 12;
+
 export const fetchMealsByIngredient = async (search) => {
   const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${search}`);
   const { meals } = await response.json();
@@ -57,14 +59,14 @@ export const fetchDrinksByFirstLetter = async (search) => {
 export const fetchInitialMeals = async () => {
   const response = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
   const { meals } = await response.json();
-  return meals;
+  return meals.slice(0, MAGIC_NUMBER);
 };
 
 export const fetchInitialDrinks = async () => {
   const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
   const { drinks } = await response.json();
 
-  return drinks;
+  return drinks.slice(0, MAGIC_NUMBER);
 };
 
 // FILTER BUTTON FETCHS-----------------------------------------------------------
@@ -102,3 +104,27 @@ export const fetchDrinkDetails = async (id) => {
   const data = await response.json();
   return (data.drinks[0]);
 };
+
+// FETCH POR CATEGORY ---------------------
+
+export const fetchMealsCategory = async (category) => {
+  const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`);
+  const { meals } = await response.json();
+
+  if (meals === null) {
+    return [];
+  } return meals.slice(0, MAGIC_NUMBER);
+};
+
+// https://www.themealdb.com/api/json/v1/1/filter.php?c=Beef
+
+export const fetchDrinksCategory = async (category) => {
+  const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${category}`);
+  const { drinks } = await response.json();
+
+  if (drinks === null) {
+    return [];
+  } return drinks.slice(0, MAGIC_NUMBER);
+};
+
+// https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=

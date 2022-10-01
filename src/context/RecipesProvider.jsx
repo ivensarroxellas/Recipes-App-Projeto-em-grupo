@@ -10,48 +10,46 @@ import { fetchMealsByIngredient,
   fetchDrinksByName,
   fetchInitialMeals,
   fetchInitialDrinks,
-  fetchButtonMeals,
-  fetchButtonDrinks,
-  fetchDrinkDetails,
+  fetchMealsCategory,
+  fetchDrinksCategory,
 } from '../service/fetch';
-import routValidator from '../service/routValidator';
-
-const NUMBER_TO_SLICE = 12;
-const SLICER5 = 5;
-
-const slicer = (arr) => arr.slice(0, NUMBER_TO_SLICE);
-
-const slicer5 = (arr) => arr.slice(0, SLICER5);
 
 function RecipesProvider({ children }) {
   const [filtredMeals, setFiltredMeals] = useState([]);
-  const [initialMeals, setInitialMeals] = useState([]);
-
   const [filtredDrinks, setFiltredDrinks] = useState([]);
+  // -- barra de busca
+
+  const [initialMeals, setInitialMeals] = useState([]);
   const [initialDrinks, setInitialDrinks] = useState([]);
+  // -- os 12 primeiros
+
+
+  const [categoryFilter, setCategoryFilter] = useState([]);
+  // -- valor do botão de category--
 
   const [filterButtons, setFilterButtons] = useState([]);
   const [drinkDetails, setDrinkDetails] = useState({});
 
+
+  const [filtredCategoryMeals, setFiltredCategoryMeals] = useState([]);
+  const [filtredCategoryDrinks, setFiltredCategoryDrinks] = useState([]);
+  // -- valor filtrado pelo botão
+
   const [radioValue, setRadioValue] = useState('');
-  const [path, setPath] = useState('');
+  // - radio da barra de pesquisa --
 
   const [isRecipeDone, setIsRecipeDone] = useState(true);
 
+
   const history = useHistory();
+  const { location: { pathname } } = history;
 
-  useEffect(() => {
-    routValidator(path, filtredMeals, filtredDrinks, history);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filtredMeals, filtredDrinks]);
-
-  // console.log(initialMeals);
+  console.log(filtredCategoryDrinks);
 
   useEffect(() => {
     const setInitialState = async () => {
-      setInitialMeals(slicer(await fetchInitialMeals()));
-      setInitialDrinks(slicer(await fetchInitialDrinks()));
+      setInitialMeals(await fetchInitialMeals());
+      setInitialDrinks(await fetchInitialDrinks());
     };
     setInitialState();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,28 +58,28 @@ function RecipesProvider({ children }) {
   const handleFetchSearch = async (search) => {
     switch (radioValue) {
     case 'ingredient':
-      if (path === '/meals') {
-        setFiltredMeals(slicer(await fetchMealsByIngredient(search)));
-      } else if (path === '/drinks') {
-        setFiltredDrinks(slicer(await fetchDrinksByIngredient(search)));
+      if (pathname === '/meals') {
+        setFiltredMeals(await fetchMealsByIngredient(search));
+      } else if (pathname === '/drinks') {
+        setFiltredDrinks(await fetchDrinksByIngredient(search));
       }
       break;
 
     case 'name':
-      if (path === '/meals') {
-        setFiltredMeals(slicer(await fetchMealsByName(search)));
-      } else if (path === '/drinks') {
-        setFiltredDrinks(slicer(await fetchDrinksByName(search)));
+      if (pathname === '/meals') {
+        setFiltredMeals(await fetchMealsByName(search));
+      } else if (pathname === '/drinks') {
+        setFiltredDrinks(await fetchDrinksByName(search));
       }
       break;
 
     case 'firstLetter':
       if (search.length > 1) {
         global.alert('Your search must have only 1 (one) character');
-      } if (path === '/meals') {
-        setFiltredMeals(slicer(await fetchMealsByFirstLetter(search)));
-      } if (path === '/drinks') {
-        setFiltredDrinks(slicer(await fetchDrinksByFirstLetter(search)));
+      } if (pathname === '/meals') {
+        setFiltredMeals(await fetchMealsByFirstLetter(search));
+      } if (pathname === '/drinks') {
+        setFiltredDrinks(await fetchDrinksByFirstLetter(search));
       }
       break;
     default: return null;
@@ -92,34 +90,43 @@ function RecipesProvider({ children }) {
     setDrinkDetails(await fetchDrinkDetails(id));
   };
 
-  const HandleButtonFetchMeals = async () => {
-    setFilterButtons(slicer5(await fetchButtonMeals()));
-  };
+  const handleFetchCategory = async () => {
+    const categoryMeals = ['Beef', 'Breakfast', 'Chicken', 'Dessert', 'Goat'];
+    const categoryDrinks = ['Ordinary Drink', 'Cocktail',
+      'Shake', 'Other/Unknown', 'Cocoa'];
+    const categoryVerificator = (arr, word) => arr.some((category) => category === word);
 
-  const HandleButtonFetchDrinks = async () => {
-    setFilterButtons(slicer5(await fetchButtonDrinks()));
-  };
-
-  const handleButtonFetch = () => {
-    if (path === '/meals') {
-      HandleButtonFetchMeals();
-    } else if (path === '/drinks') {
-      HandleButtonFetchDrinks();
+    if (categoryVerificator(categoryMeals, categoryFilter)) {
+      return setFiltredCategoryMeals(await fetchMealsCategory(categoryFilter));
+    } if (categoryVerificator(categoryDrinks, categoryFilter)) {
+      return setFiltredCategoryDrinks(await fetchDrinksCategory(categoryFilter));
     }
   };
 
+  // fetchcategoryButtons---------------------------------
+
+  useEffect(() => {
+    handleFetchCategory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryFilter]);
+
   const contextValue = {
+    categoryFilter,
     filtredMeals,
     filtredDrinks,
-    path,
     radioValue,
     initialMeals,
     initialDrinks,
     isRecipeDone,
     setRadioValue,
     handleFetchSearch,
-    setPath,
     setFiltredDrinks,
+    setCategoryFilter,
+    filtredCategoryMeals,
+    filtredCategoryDrinks,
+    pathname,
+    setFiltredCategoryMeals,
+    setFiltredCategoryDrinks,
     HandleButtonFetchMeals,
     HandleButtonFetchDrinks,
     handleButtonFetch,
@@ -127,6 +134,7 @@ function RecipesProvider({ children }) {
     drinkDetails,
     filterButtons,
     setIsRecipeDone,
+
   };
   return (
     <RecipesContext.Provider value={ contextValue }>
