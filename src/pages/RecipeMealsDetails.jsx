@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import copy from 'clipboard-copy';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import CarouselDrinks from '../components/CarouselDrinks';
-
 // Auxílio Luiz Filipe
 function RecipeMealsDetails({ match }) {
   const [RecipeMeals, setRecipeMeals] = useState({});
+  const [shareCopyRender, setShareCopyRender] = useState(false);
   const { params: { id } } = match;
   let renderButton = '';
-
+  const history = useHistory();
   const embedURL = (url) => {
     if (url) {
       const URL = url;
@@ -15,7 +17,6 @@ function RecipeMealsDetails({ match }) {
       return newURL;
     }
   };
-
   useEffect(() => {
     const fetchMeal = async () => {
       const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
@@ -24,12 +25,16 @@ function RecipeMealsDetails({ match }) {
     };
     fetchMeal();
   }, [id]);
-
+  function handleClickShareBtn() {
+    setShareCopyRender(true);
+    copy(`http://localhost:3000${window.location.pathname}`);
+  }
+  const recipesInProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
+  const NameButton = !recipesInProgress ? 'Start Recipe' : 'Continue Recipe';
   const doneRecipesOnLocal = JSON.parse(localStorage.getItem('doneRecipes'));
   if (doneRecipesOnLocal !== null) {
     renderButton = doneRecipesOnLocal.some((recipe) => recipe.id !== id);
   }
-
   const rendIngredients = () => {
     const ingredients = [];
     const NUMBER_QUINZE = 15;
@@ -42,7 +47,6 @@ function RecipeMealsDetails({ match }) {
     }
     return ingredients;
   };
-
   return (
     <>
       <img
@@ -52,6 +56,20 @@ function RecipeMealsDetails({ match }) {
       />
       <h1 data-testid="recipe-title">{RecipeMeals.strMeal}</h1>
       <h3 data-testid="recipe-category">{RecipeMeals.strCategory}</h3>
+      <button
+        type="button"
+        data-testid="share-btn"
+        onClick={ handleClickShareBtn }
+      >
+        Compartilhar Receita
+      </button>
+      {shareCopyRender && <h4>Link copied!</h4>}
+      <button
+        type="button"
+        data-testid="favorite-btn"
+      >
+        Favoritar Receita
+      </button>
       <ul>
         <h6>Ingredients:</h6>
         { rendIngredients().map((item, index) => (
@@ -71,7 +89,6 @@ function RecipeMealsDetails({ match }) {
           allowFullScreen
           data-testid="video"
         />}
-
       <div>
         <CarouselDrinks />
       </div>
@@ -81,13 +98,13 @@ function RecipeMealsDetails({ match }) {
           type="button"
           name="startRecipe"
           className="fixed-bottom position-fixed"
+          onClick={ () => history.push(`/meals/${id}/in-progress`) }
         >
-          Start Recipe
+          {NameButton}
         </button>)}
     </>
   );
 }
-
 RecipeMealsDetails.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -95,5 +112,4 @@ RecipeMealsDetails.propTypes = {
     }),
   }).isRequired,
 };
-
 export default RecipeMealsDetails;

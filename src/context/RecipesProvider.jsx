@@ -10,13 +10,9 @@ import { fetchMealsByIngredient,
   fetchDrinksByName,
   fetchInitialMeals,
   fetchInitialDrinks,
-  // fetchButtonMeals,
-  // fetchButtonDrinks,
   fetchMealsCategory,
   fetchDrinksCategory,
 } from '../service/fetch';
-
-// import slicer, { slice5 } from '../service/slicer';
 
 function RecipesProvider({ children }) {
   const [filtredMeals, setFiltredMeals] = useState([]);
@@ -27,8 +23,13 @@ function RecipesProvider({ children }) {
   const [initialDrinks, setInitialDrinks] = useState([]);
   // -- os 12 primeiros
 
+
   const [categoryFilter, setCategoryFilter] = useState([]);
   // -- valor do botão de category--
+
+  const [filterButtons, setFilterButtons] = useState([]);
+  const [drinkDetails, setDrinkDetails] = useState({});
+
 
   const [filtredCategoryMeals, setFiltredCategoryMeals] = useState([]);
   const [filtredCategoryDrinks, setFiltredCategoryDrinks] = useState([]);
@@ -36,6 +37,9 @@ function RecipesProvider({ children }) {
 
   const [radioValue, setRadioValue] = useState('');
   // - radio da barra de pesquisa --
+
+  const [isRecipeDone, setIsRecipeDone] = useState(true);
+
 
   const history = useHistory();
   const { location: { pathname } } = history;
@@ -82,6 +86,10 @@ function RecipesProvider({ children }) {
     }
   };
 
+  const handleFetchDetails = async (id) => {
+    setDrinkDetails(await fetchDrinkDetails(id));
+  };
+
   const handleFetchCategory = async () => {
     const categoryMeals = ['Beef', 'Breakfast', 'Chicken', 'Dessert', 'Goat'];
     const categoryDrinks = ['Ordinary Drink', 'Cocktail',
@@ -109,6 +117,7 @@ function RecipesProvider({ children }) {
     radioValue,
     initialMeals,
     initialDrinks,
+    isRecipeDone,
     setRadioValue,
     handleFetchSearch,
     setFiltredDrinks,
@@ -118,6 +127,14 @@ function RecipesProvider({ children }) {
     pathname,
     setFiltredCategoryMeals,
     setFiltredCategoryDrinks,
+    HandleButtonFetchMeals,
+    HandleButtonFetchDrinks,
+    handleButtonFetch,
+    handleFetchDetails,
+    drinkDetails,
+    filterButtons,
+    setIsRecipeDone,
+
   };
   return (
     <RecipesContext.Provider value={ contextValue }>

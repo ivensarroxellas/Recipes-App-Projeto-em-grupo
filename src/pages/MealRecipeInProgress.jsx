@@ -17,11 +17,11 @@ function MealRecipeInProgress() {
     if (window.location.pathname.includes('/meals')) {
       fetchMealsDetails(id);
     }
+    // eslint-disable-next-line
   }, []);
 
   return (
     <div>
-      {console.log(mealDetails.meals)}
       {renderPermission && (
         mealDetails.meals.map((elem, index) => (
           <div key={ index }>

@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import copy from 'clipboard-copy';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import CarouselMeals from '../components/CarouselMeals';
 
 // Auxílio Luiz Filipe
 function RecipeDrinksDetails({ match }) {
   const [RecipeDrinks, setRecipeDrinks] = useState({});
+  const [shareCopyRender, setShareCopyRender] = useState(false);
   const { params: { id } } = match;
   let renderButton = '';
+  const history = useHistory();
 
   useEffect(() => {
     const fetchDrink = async () => {
@@ -16,6 +20,14 @@ function RecipeDrinksDetails({ match }) {
     };
     fetchDrink();
   }, [id]);
+
+  function handleClickShareBtn() {
+    setShareCopyRender(true);
+    copy(`http://localhost:3000${window.location.pathname}`);
+  }
+
+  const recipesInProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
+  const NameButton = !recipesInProgress ? 'Start Recipe' : 'Continue Recipe';
 
   const doneRecipesOnLocal = JSON.parse(localStorage.getItem('doneRecipes'));
   if (doneRecipesOnLocal !== null) {
@@ -44,6 +56,20 @@ function RecipeDrinksDetails({ match }) {
       />
       <h1 data-testid="recipe-title">{RecipeDrinks.strDrink}</h1>
       <h3 data-testid="recipe-category">{RecipeDrinks.strAlcoholic}</h3>
+      <button
+        type="button"
+        data-testid="share-btn"
+        onClick={ handleClickShareBtn }
+      >
+        Compartilhar Receita
+      </button>
+      {shareCopyRender && <h4>Link copied!</h4>}
+      <button
+        type="button"
+        data-testid="favorite-btn"
+      >
+        Favoritar Receita
+      </button>
       <ul>
         <h6>Ingredients:</h6>
         { rendIngredients().map((item, index) => (
@@ -66,8 +92,9 @@ function RecipeDrinksDetails({ match }) {
           type="button"
           name="startRecipe"
           className="fixed-bottom"
+          onClick={ () => history.push(`/drinks/${id}/in-progress`) }
         >
-          Start Recipe
+          {NameButton}
         </button>)}
     </>
   );
