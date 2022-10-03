@@ -1,4 +1,6 @@
-const MAGIC_NUMBER = 12;
+const TWELVE = 12;
+const FIVE = 5;
+const slicer = (arr, numToSlice) => arr.slice(0, numToSlice);
 
 export const fetchMealsByIngredient = async (search) => {
   const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${search}`);
@@ -19,6 +21,8 @@ export const fetchMealsByName = async (search) => {
 
   return meals;
 };
+
+// fetchMealsByName('Arrabiata');
 
 export const fetchMealsByFirstLetter = async (search) => {
   const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${search}`);
@@ -59,14 +63,14 @@ export const fetchDrinksByFirstLetter = async (search) => {
 export const fetchInitialMeals = async () => {
   const response = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
   const { meals } = await response.json();
-  return meals.slice(0, MAGIC_NUMBER);
+  return slicer(meals, TWELVE);
 };
 
 export const fetchInitialDrinks = async () => {
   const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
   const { drinks } = await response.json();
 
-  return drinks.slice(0, MAGIC_NUMBER);
+  return slicer(drinks, TWELVE);
 };
 
 // FILTER BUTTON FETCHS-----------------------------------------------------------
@@ -101,8 +105,8 @@ export const fetchDrinkRecipeById = async (id) => {
 
 export const fetchDrinkDetails = async (id) => {
   const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
-  const data = await response.json();
-  return (data.drinks[0]);
+  const { drinks } = await response.json();
+  return (drinks[0]);
 };
 
 // FETCH POR CATEGORY ---------------------
@@ -113,7 +117,7 @@ export const fetchMealsCategory = async (category) => {
 
   if (meals === null) {
     return [];
-  } return meals.slice(0, MAGIC_NUMBER);
+  } return slicer(meals, TWELVE);
 };
 
 // https://www.themealdb.com/api/json/v1/1/filter.php?c=Beef
@@ -124,7 +128,19 @@ export const fetchDrinksCategory = async (category) => {
 
   if (drinks === null) {
     return [];
-  } return drinks.slice(0, MAGIC_NUMBER);
+  } return slicer(drinks, TWELVE);
 };
 
-// https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=
+// FETCH BUTTONS CATECORY---------------------
+
+export const fetchButtonMealsCategory = async () => {
+  const response = await fetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list');
+  const { meals } = await response.json();
+  return slicer(meals, FIVE);
+};
+
+export const fetchButtonDrinksCategory = async () => {
+  const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list');
+  const { drinks } = await response.json();
+  return slicer(drinks, FIVE);
+};

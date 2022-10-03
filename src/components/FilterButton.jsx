@@ -1,13 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-
 import RecipesContext from '../context/RecipesContext';
+import { fetchButtonDrinksCategory, fetchButtonMealsCategory } from '../service/fetch';
 import '../styles/components/CardList.css';
 
 function FilterButton() {
-  const SLICER5 = 5;
-  const slicer5 = (arr) => arr.slice(0, SLICER5);
-
   const { setCategoryFilter,
     filtredCategoryMeals,
     filtredCategoryDrinks,
@@ -25,30 +22,14 @@ function FilterButton() {
     }
   };
 
-  console.log(filtredCategoryDrinks);
-
-  // console.table(filtredCategoryMeals);
-
   const history = useHistory();
   const { location: { pathname } } = history;
 
-  const fetchButtonMeals = async () => {
-    const response = await fetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list');
-    const { meals } = await response.json();
-    return setFilterButtons(slicer5(meals));
-  };
-
-  const fetchButtonDrinks = async () => {
-    const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list');
-    const { drinks } = await response.json();
-    return setFilterButtons(slicer5(drinks));
-  };
-
-  const handleButtonFetch = () => {
+  const handleButtonFetch = async () => {
     if (pathname === '/meals') {
-      fetchButtonMeals();
+      setFilterButtons(await fetchButtonMealsCategory());
     } else if (pathname === '/drinks') {
-      fetchButtonDrinks();
+      setFilterButtons(await fetchButtonDrinksCategory());
     }
   };
 
@@ -58,9 +39,17 @@ function FilterButton() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  // console.log(filterButtons);
-  const handleChange = ({ target: { value } }) => {
-    setCategoryFilter(value);
+  const toogleFilters = () => {
+    if (pathname === '/meals') {
+      return setFiltredCategoryMeals([]);
+    } if (pathname === '/drinks') {
+      return setFiltredCategoryDrinks([]);
+    }
+  };
+
+  const handleChange = ({ target: { name } }) => {
+    setCategoryFilter(name);
+    toogleFilters();
   };
 
   return (
@@ -72,7 +61,7 @@ function FilterButton() {
           <button
             data-testid={ `${f.strCategory}-category-filter` }
             type="button"
-            value={ f.strCategory }
+            name={ f.strCategory }
             onClick={ handleChange }
           >
             {f.strCategory}

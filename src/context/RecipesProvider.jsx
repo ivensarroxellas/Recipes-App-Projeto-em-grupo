@@ -23,13 +23,11 @@ function RecipesProvider({ children }) {
   const [initialDrinks, setInitialDrinks] = useState([]);
   // -- os 12 primeiros
 
-
   const [categoryFilter, setCategoryFilter] = useState([]);
   // -- valor do botão de category--
 
   const [filterButtons, setFilterButtons] = useState([]);
   const [drinkDetails, setDrinkDetails] = useState({});
-
 
   const [filtredCategoryMeals, setFiltredCategoryMeals] = useState([]);
   const [filtredCategoryDrinks, setFiltredCategoryDrinks] = useState([]);
@@ -40,11 +38,14 @@ function RecipesProvider({ children }) {
 
   const [isRecipeDone, setIsRecipeDone] = useState(true);
 
-
   const history = useHistory();
   const { location: { pathname } } = history;
 
-  console.log(filtredCategoryDrinks);
+  const TWELVE = 12;
+  const slicer = (arr) => (
+    arr.length === TWELVE
+      ? arr : arr.slice(0, NUMBER_TO_SLICE)
+  );
 
   useEffect(() => {
     const setInitialState = async () => {
@@ -59,17 +60,17 @@ function RecipesProvider({ children }) {
     switch (radioValue) {
     case 'ingredient':
       if (pathname === '/meals') {
-        setFiltredMeals(await fetchMealsByIngredient(search));
+        setFiltredMeals(slicer(await fetchMealsByIngredient(search)));
       } else if (pathname === '/drinks') {
-        setFiltredDrinks(await fetchDrinksByIngredient(search));
+        setFiltredDrinks(slicer(await fetchDrinksByIngredient(search)));
       }
       break;
 
     case 'name':
       if (pathname === '/meals') {
-        setFiltredMeals(await fetchMealsByName(search));
+        setFiltredMeals(slicer(await fetchMealsByName(search)));
       } else if (pathname === '/drinks') {
-        setFiltredDrinks(await fetchDrinksByName(search));
+        setFiltredDrinks(slicer(await fetchDrinksByName(search)));
       }
       break;
 
@@ -77,17 +78,13 @@ function RecipesProvider({ children }) {
       if (search.length > 1) {
         global.alert('Your search must have only 1 (one) character');
       } if (pathname === '/meals') {
-        setFiltredMeals(await fetchMealsByFirstLetter(search));
+        setFiltredMeals(slicer(await fetchMealsByFirstLetter(search)));
       } if (pathname === '/drinks') {
-        setFiltredDrinks(await fetchDrinksByFirstLetter(search));
+        setFiltredDrinks(slicer(await fetchDrinksByFirstLetter(search)));
       }
       break;
     default: return null;
     }
-  };
-
-  const handleFetchDetails = async (id) => {
-    setDrinkDetails(await fetchDrinkDetails(id));
   };
 
   const handleFetchCategory = async () => {
@@ -102,8 +99,6 @@ function RecipesProvider({ children }) {
       return setFiltredCategoryDrinks(await fetchDrinksCategory(categoryFilter));
     }
   };
-
-  // fetchcategoryButtons---------------------------------
 
   useEffect(() => {
     handleFetchCategory();
@@ -124,17 +119,14 @@ function RecipesProvider({ children }) {
     setCategoryFilter,
     filtredCategoryMeals,
     filtredCategoryDrinks,
-    pathname,
     setFiltredCategoryMeals,
     setFiltredCategoryDrinks,
-    HandleButtonFetchMeals,
-    HandleButtonFetchDrinks,
-    handleButtonFetch,
-    handleFetchDetails,
     drinkDetails,
     filterButtons,
     setIsRecipeDone,
-
+    setFilterButtons,
+    setDrinkDetails,
+    setInitialMeals,
   };
   return (
     <RecipesContext.Provider value={ contextValue }>

@@ -18,19 +18,22 @@ function CardList() {
   const history = useHistory();
   const { location: { pathname } } = history;
 
-  const mealsVerificator = !filtredMeals.length
-    ? showMealCard(initialMeals)
-    : showMealCard(filtredMeals);
+  const mealsVerify = () => (
+    filtredMeals.length === 0
+      ? showMealCard(initialMeals)
+      : showMealCard(filtredMeals)
+  );
 
-  const drinksVerificator = !filtredDrinks.length
-    ? showDrinkCard(initialDrinks)
-    : showDrinkCard(filtredDrinks);
+  const drinksVerify = () => (
+    filtredDrinks.length === 0
+      ? showDrinkCard(initialDrinks)
+      : showDrinkCard(filtredDrinks));
 
   const handleShowInitialRecipes = () => {
     if (pathname === '/meals') {
-      return mealsVerificator;
+      return mealsVerify();
     } if (pathname === '/drinks') {
-      return drinksVerificator;
+      return drinksVerify();
     }
   };
 
@@ -46,15 +49,15 @@ function CardList() {
     } return handleShowInitialRecipes();
   };
 
-  const showIfEmpty = () => {
-    if (filtredCategoryMeals.length === 0) {
-      return showMealCard(initialMeals);
-    } if (filtredCategoryDrinks.length === 0) {
-      return showMealCard(initialDrinks);
-    }
-  };
+  // const showIfEmpty = () => {
+  //   if (filtredCategoryMeals.length === 0) {
+  //     return showMealCard(initialMeals);
+  //   } if (filtredCategoryDrinks.length === 0) {
+  //     return showMealCard(initialDrinks);
+  //   }
+  // };
 
-  const conditionalShowRecipes = () => {
+  const showRecipesList = () => {
     const categoryMeals = ['Beef', 'Breakfast', 'Chicken', 'Dessert', 'Goat'];
     const categoryDrinks = ['Ordinary Drink', 'Cocktail', 'Shake',
       'Other/Unknown', 'Cocoa'];
@@ -77,7 +80,7 @@ function CardList() {
 
     <div>
       <section />
-      { showIfEmpty() && conditionalShowRecipes() }
+      { showRecipesList() }
 
     </div>
 
