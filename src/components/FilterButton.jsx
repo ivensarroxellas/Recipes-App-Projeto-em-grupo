@@ -12,6 +12,10 @@ function FilterButton() {
     setFiltredCategoryDrinks,
   } = useContext(RecipesContext);
 
+  const FIVE = 5;
+
+  const sliceCategoryBtns = (arr) => arr.slice(0, FIVE);
+
   const [filterButtons, setFilterButtons] = useState([]);
 
   const handleCleanFilters = () => {
@@ -27,9 +31,9 @@ function FilterButton() {
 
   const handleButtonFetch = async () => {
     if (pathname === '/meals') {
-      setFilterButtons(await fetchButtonMealsCategory());
+      setFilterButtons(sliceCategoryBtns(await fetchButtonMealsCategory()));
     } else if (pathname === '/drinks') {
-      setFilterButtons(await fetchButtonDrinksCategory());
+      setFilterButtons(sliceCategoryBtns(await fetchButtonDrinksCategory()));
     }
   };
 

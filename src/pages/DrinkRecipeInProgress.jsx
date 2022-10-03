@@ -6,6 +6,8 @@ function DrinkRecipeInProgress() {
   const [renderPermission, setrenderPermission] = useState(false);
   const { id } = useParams();
 
+  const history = useHistory();
+
   const fetchDrinksDetails = async (idDrink) => {
     const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${idDrink}`);
     const results = await response.json();
@@ -19,6 +21,10 @@ function DrinkRecipeInProgress() {
     }
     // eslint-disable-next-line
   }, []);
+
+  const redirectToFinishDoneRecipe = () => {
+    history.push('/done-recipes');
+  };
 
   return (
     <div>
@@ -40,7 +46,14 @@ function DrinkRecipeInProgress() {
             {/* Tentar renderizar ingredients e measures */}
           </div>
         )))}
-      <button data-testid="finish-recipe-btn" type="button">Finish Recipe</button>
+      <button
+        data-testid="finish-recipe-btn"
+        type="button"
+        onClick={ redirectToFinishDoneRecipe }
+      >
+        Finish Recipe
+
+      </button>
     </div>
   );
 }

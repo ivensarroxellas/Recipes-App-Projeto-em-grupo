@@ -75,12 +75,11 @@ function RecipeMealsDetails({ match }) {
     if (!checkingRecipeRepeated(recipeLocalStorage, recipeMealFormatted)) {
       return [...recipeLocalStorage, recipeMealFormatted];
     }
-    console.log(`Receita ${recipeMeals.strMeal} já foi salva`);
+    // console.log(`Receita ${recipeMeals.strMeal} já foi salva`);
     return recipeLocalStorage;
   };
 
   const handleFavorite = () => {
-    console.log(recipeMeals);
     // Traz o que está salvo no localStorage
     const getRecipeStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
     // Salva em um array o spred do localStorage (se tiver) e a receita atual

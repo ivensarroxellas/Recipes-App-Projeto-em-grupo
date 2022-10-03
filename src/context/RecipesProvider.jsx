@@ -42,15 +42,13 @@ function RecipesProvider({ children }) {
   const { location: { pathname } } = history;
 
   const TWELVE = 12;
-  const slicer = (arr) => (
-    arr.length === TWELVE
-      ? arr : arr.slice(0, TWELVE)
-  );
+
+  const slicerRecipes = (arr) => arr.slice(0, TWELVE);
 
   useEffect(() => {
     const setInitialState = async () => {
-      setInitialMeals(await fetchInitialMeals());
-      setInitialDrinks(await fetchInitialDrinks());
+      setInitialMeals(slicerRecipes(await fetchInitialMeals()));
+      setInitialDrinks(slicerRecipes(await fetchInitialDrinks()));
     };
     setInitialState();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,17 +58,17 @@ function RecipesProvider({ children }) {
     switch (radioValue) {
     case 'ingredient':
       if (pathname === '/meals') {
-        setFiltredMeals(slicer(await fetchMealsByIngredient(search)));
+        setFiltredMeals(slicerRecipes(await fetchMealsByIngredient(search)));
       } else if (pathname === '/drinks') {
-        setFiltredDrinks(slicer(await fetchDrinksByIngredient(search)));
+        setFiltredDrinks(slicerRecipes(await fetchDrinksByIngredient(search)));
       }
       break;
 
     case 'name':
       if (pathname === '/meals') {
-        setFiltredMeals(slicer(await fetchMealsByName(search)));
+        setFiltredMeals(slicerRecipes(await fetchMealsByName(search)));
       } else if (pathname === '/drinks') {
-        setFiltredDrinks(slicer(await fetchDrinksByName(search)));
+        setFiltredDrinks(slicerRecipes(await fetchDrinksByName(search)));
       }
       break;
 
@@ -78,9 +76,9 @@ function RecipesProvider({ children }) {
       if (search.length > 1) {
         global.alert('Your search must have only 1 (one) character');
       } if (pathname === '/meals') {
-        setFiltredMeals(slicer(await fetchMealsByFirstLetter(search)));
+        setFiltredMeals(slicerRecipes(await fetchMealsByFirstLetter(search)));
       } if (pathname === '/drinks') {
-        setFiltredDrinks(slicer(await fetchDrinksByFirstLetter(search)));
+        setFiltredDrinks(slicerRecipes(await fetchDrinksByFirstLetter(search)));
       }
       break;
     default: return null;
@@ -94,9 +92,13 @@ function RecipesProvider({ children }) {
     const categoryVerificator = (arr, word) => arr.some((category) => category === word);
 
     if (categoryVerificator(categoryMeals, categoryFilter)) {
-      return setFiltredCategoryMeals(await fetchMealsCategory(categoryFilter));
+      return setFiltredCategoryMeals(
+        slicerRecipes(await fetchMealsCategory(categoryFilter)),
+      );
     } if (categoryVerificator(categoryDrinks, categoryFilter)) {
-      return setFiltredCategoryDrinks(await fetchDrinksCategory(categoryFilter));
+      return setFiltredCategoryDrinks(
+        slicerRecipes(await fetchDrinksCategory(categoryFilter)),
+      );
     }
   };
 
