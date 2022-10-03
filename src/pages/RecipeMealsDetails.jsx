@@ -73,7 +73,6 @@ function RecipeMealsDetails({ match }) {
         ingredients.push(`${recipeMeals[ingredient]} (${recipeMeals[measure]}) `);
       }
     }
-    console.log('ingredients: ', ingredients);
     return ingredients;
   };
 

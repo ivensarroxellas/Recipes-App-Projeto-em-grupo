@@ -10,23 +10,25 @@ function FavoritedRecipes() {
   const [shareCopyRender, setShareCopyRender] = useState(false);
   const [getRecipeStorage, setGetRecipeStorage] = useState([]);
   const [favIcon, setFavIcon] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
 
-  const handleFavorite = (id) => {
-    setIsLoading(false);
-    const newRecipeStorage = getRecipeStorage.filter((recipe) => recipe.id !== id);
-    setFavIcon(false);
-    localStorage.setItem('favoriteRecipes', JSON.stringify(newRecipeStorage));
-    setIsLoading(true);
-  };
-
-  useEffect(() => {
+  const loadLocalStorage = () => {
     const getLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
     if (getLocalStorage) {
       setGetRecipeStorage(getLocalStorage);
     }
+  };
+
+  useEffect(() => {
+    loadLocalStorage();
     // eslint-disable-next-line
   }, []);
+
+  const handleFavorite = (id) => {
+    const newRecipeStorage = getRecipeStorage.filter((recipe) => recipe.id !== id);
+    localStorage.setItem('favoriteRecipes', JSON.stringify(newRecipeStorage));
+    setFavIcon(false);
+    loadLocalStorage();
+  };
 
   function handleClickShareBtn(type, id) {
     if (type === 'meal') {
@@ -70,7 +72,7 @@ function FavoritedRecipes() {
           Drinks
         </button>
 
-        {isLoading && getRecipeStorage.map((recipe, index) => {
+        {getRecipeStorage.map((recipe, index) => {
           const { image, name, category, id, nationality, type, alcoholicOrNot } = recipe;
           return (
             <div key={ index }>
