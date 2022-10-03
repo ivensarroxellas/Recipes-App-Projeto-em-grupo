@@ -3,10 +3,16 @@ import copy from 'clipboard-copy';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import CarouselDrinks from '../components/CarouselDrinks';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
+
 // Auxílio Luiz Filipe
 function RecipeMealsDetails({ match }) {
   const [recipeMeals, setRecipeMeals] = useState({});
   const [shareCopyRender, setShareCopyRender] = useState(false);
+  const [getRecipeStorage, setGetRecipeStorage] = useState([]);
+  const [favIcon, setFavIcon] = useState(false);
+
   const { params: { id } } = match;
   let renderButton = '';
   const history = useHistory();
@@ -17,6 +23,14 @@ function RecipeMealsDetails({ match }) {
       return newURL;
     }
   };
+
+  useEffect(() => {
+    const getLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    if (getLocalStorage) {
+      setGetRecipeStorage(getLocalStorage);
+    }
+  }, []);
+
   useEffect(() => {
     const fetchMeal = async () => {
       const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
@@ -25,6 +39,20 @@ function RecipeMealsDetails({ match }) {
     };
     fetchMeal();
   }, [id]);
+
+  const iconFavorite = () => {
+    const checkFavorite = getRecipeStorage.some((recipe) => recipe.id === id);
+    if (checkFavorite) {
+      setFavIcon(true);
+    } else {
+      setFavIcon(false);
+    }
+  };
+
+  useEffect(() => {
+    iconFavorite();
+  });
+
   function handleClickShareBtn() {
     setShareCopyRender(true);
     copy(`http://localhost:3000${window.location.pathname}`);
@@ -80,10 +108,9 @@ function RecipeMealsDetails({ match }) {
   };
 
   const handleFavorite = () => {
-    console.log(recipeMeals);
-    const getRecipeStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
     const newFavoriteRecipes = checkingFavoriteRecipe(getRecipeStorage);
     localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoriteRecipes));
+    setGetRecipeStorage(JSON.parse(localStorage.getItem('favoriteRecipes')));
   };
 
   return (
@@ -105,10 +132,11 @@ function RecipeMealsDetails({ match }) {
       {shareCopyRender && <h4>Link copied!</h4>}
       <button
         type="button"
-        data-testid="favorite-btn"
         onClick={ handleFavorite }
       >
-        <img src="src/images/whiteHeartIcon.svg" alt="img coração" />
+        { favIcon
+          ? <img data-testid="favorite-btn" src={ blackHeartIcon } alt="favorite" />
+          : <img data-testid="favorite-btn" src={ whiteHeartIcon } alt="not favorite" />}
       </button>
       <ul>
         <h6>Ingredients:</h6>

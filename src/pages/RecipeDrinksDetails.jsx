@@ -17,9 +17,9 @@ function RecipeDrinksDetails({ match }) {
   const history = useHistory();
 
   useEffect(() => {
-    const load = JSON.parse(localStorage.getItem('favoriteRecipes'));
-    if (load) {
-      setGetRecipeStorage(load);
+    const getLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    if (getLocalStorage) {
+      setGetRecipeStorage(getLocalStorage);
     }
   }, []);
 
@@ -129,12 +129,8 @@ function RecipeDrinksDetails({ match }) {
         onClick={ handleFavorite }
       >
         { favIcon
-          ? <img data-testid="favorite-btn" src={ blackHeartIcon } alt="icon favorite" />
-          : <img
-            data-testid="favorite-btn"
-            src={ whiteHeartIcon }
-            alt="icon not favorite"
-          />}
+          ? <img data-testid="favorite-btn" src={ blackHeartIcon } alt="favorite" />
+          : <img data-testid="favorite-btn" src={ whiteHeartIcon } alt="not favorite" />}
       </button>
       <ul>
         <h6>Ingredients:</h6>
