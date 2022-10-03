@@ -20,9 +20,28 @@ function DrinkRecipeInProgress() {
     // eslint-disable-next-line
   }, []);
 
+  const rendIngredients = () => {
+    const ingredients = [];
+    const NUMBER_QUINZE = 15;
+    for (let index = 1; index <= NUMBER_QUINZE; index += 1) {
+      const ingredient = `strIngredient${index}`;
+      const measure = `strMeasure${index}`;
+      console.log('drinkDetails: ', drinkDetails.drinks[0]);
+      if (drinkDetails.drinks[0][ingredient] !== null
+        && drinkDetails.drinks[0][measure] !== '') {
+        let ingredientDrink = `${drinkDetails.drinks[0][ingredient]}`;
+        if (drinkDetails.drinks[0][measure]) {
+          ingredientDrink += ` (${drinkDetails.drinks[0][measure]})`;
+        }
+        ingredients.push(ingredientDrink);
+      }
+    }
+    // console.log('ingredients: ', ingredients);
+    return ingredients;
+  };
+
   return (
     <div>
-      {console.log(drinkDetails.drinks)}
       {renderPermission && (
         drinkDetails.drinks.map((elem, index) => (
           <div key={ index }>
@@ -37,7 +56,19 @@ function DrinkRecipeInProgress() {
             <button data-testid="favorite-btn" type="button">Favorite</button>
             <p data-testid="recipe-category">{ elem.strCategory }</p>
             <p data-testid="instructions">{ elem.strInstructions }</p>
-            {/* Tentar renderizar ingredients e measures */}
+            <h6>Ingredients:</h6>
+            { rendIngredients().map((item, i) => (
+              <li key={ i }>
+                <label
+                  htmlFor="ingredient"
+                  data-testid={ `${i}-ingredient-step` }
+                >
+                  <input type="checkbox" name="ingredient" id="ingredient" />
+                  {' '}
+                  {item}
+                </label>
+              </li>
+            ))}
           </div>
         )))}
       <button data-testid="finish-recipe-btn" type="button">Finish Recipe</button>
