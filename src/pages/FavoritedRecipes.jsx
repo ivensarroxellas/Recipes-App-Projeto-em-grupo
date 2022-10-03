@@ -1,39 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import copy from 'clipboard-copy';
 import { Link } from 'react-router-dom';
 import imageProfile from '../images/profileIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
-// import whiteHeartIcon from '../images/whiteHeartIcon.svg';
-// import blackHeartIcon from '../images/blackHeartIcon.svg';
-
-// mock teste apagar ao final
-const mockRecipe = [
-  {
-    id: '52771',
-    type: 'meal',
-    nationality: 'Italian',
-    category: 'Vegetarian',
-    alcoholicOrNot: '',
-    name: 'Spicy Arrabiata Penne',
-    image: 'https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg',
-  },
-  {
-    id: '178319',
-    type: 'drink',
-    nationality: '',
-    category: 'Cocktail',
-    alcoholicOrNot: 'Alcoholic',
-    name: 'Aquamarine',
-    image: 'https://www.thecocktaildb.com/images/media/drink/zvsre31572902738.jpg',
-  }];
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 function FavoritedRecipes() {
   const [shareCopyRender, setShareCopyRender] = useState(false);
+  const [getRecipeStorage, setGetRecipeStorage] = useState([]);
+  const [favIcon, setFavIcon] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const changeImageFavorite = () => {
-    // const recipesFavorited = JSON.parse(localStorage.getItem('favoriteRecipes'));
-  // const NameButton = !recipesFavorited ? 'Start Recipe' : 'Continue Recipe';
+  const handleFavorite = (id) => {
+    setIsLoading(false);
+    const newRecipeStorage = getRecipeStorage.filter((recipe) => recipe.id !== id);
+    setFavIcon(false);
+    localStorage.setItem('favoriteRecipes', JSON.stringify(newRecipeStorage));
+    setIsLoading(true);
   };
+
+  useEffect(() => {
+    const getLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    if (getLocalStorage) {
+      setGetRecipeStorage(getLocalStorage);
+    }
+    // eslint-disable-next-line
+  }, []);
 
   function handleClickShareBtn(type, id) {
     if (type === 'meal') {
@@ -77,7 +70,7 @@ function FavoritedRecipes() {
           Drinks
         </button>
 
-        {mockRecipe.map((recipe, index) => {
+        {isLoading && getRecipeStorage.map((recipe, index) => {
           const { image, name, category, id, nationality, type, alcoholicOrNot } = recipe;
           return (
             <div key={ index }>
@@ -124,12 +117,22 @@ function FavoritedRecipes() {
                   />
                 </button>
                 {shareCopyRender && <h4>Link copied!</h4>}
-                <button type="button" onClick={ changeImageFavorite }>
-                  <img
-                    data-testid={ `${index}-horizontal-favorite-btn` }
-                    // src={ heartIcon }
-                    alt="Favoritado"
-                  />
+                <button type="button" onClick={ () => handleFavorite(id) }>
+                  { favIcon
+                    ? (
+                      <img
+                        data-testid={ `${index}-horizontal-favorite-btn` }
+                        src={ blackHeartIcon }
+                        alt="favorite"
+                      />
+                    )
+                    : (
+                      <img
+                        data-testid={ `${index}-horizontal-favorite-btn` }
+                        src={ whiteHeartIcon }
+                        alt="not favorite"
+                      />
+                    )}
                 </button>
               </div>
 
