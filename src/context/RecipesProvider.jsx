@@ -44,7 +44,7 @@ function RecipesProvider({ children }) {
   const TWELVE = 12;
   const slicer = (arr) => (
     arr.length === TWELVE
-      ? arr : arr.slice(0, NUMBER_TO_SLICE)
+      ? arr : arr.slice(0, TWELVE)
   );
 
   useEffect(() => {
