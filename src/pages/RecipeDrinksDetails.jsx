@@ -6,7 +6,7 @@ import CarouselMeals from '../components/CarouselMeals';
 
 // Auxílio Luiz Filipe
 function RecipeDrinksDetails({ match }) {
-  const [RecipeDrinks, setRecipeDrinks] = useState({});
+  const [recipeDrinks, setRecipeDrinks] = useState({});
   const [shareCopyRender, setShareCopyRender] = useState(false);
   const { params: { id } } = match;
   let renderButton = '';
@@ -40,22 +40,65 @@ function RecipeDrinksDetails({ match }) {
     for (let index = 0; index <= NUMBER_QUINZE; index += 1) {
       const ingredient = `strIngredient${index}`;
       const measure = `strMeasure${index}`;
-      if (RecipeDrinks[ingredient] && RecipeDrinks[measure] !== null) {
-        ingredients.push(`${RecipeDrinks[ingredient]} (${RecipeDrinks[measure]}) `);
+      if (recipeDrinks[ingredient] && recipeDrinks[measure] !== null) {
+        ingredients.push(`${recipeDrinks[ingredient]} (${recipeDrinks[measure]}) `);
       }
     }
     return ingredients;
+  };
+
+  const recipeFormat = () => {
+    const { idDrink, strCategory, strDrink, strDrinkThumb,
+    } = recipeDrinks;
+    return {
+      id: idDrink,
+      type: 'drink',
+      nationality: '',
+      category: strCategory,
+      alcoholicOrNot: 'Alcoholic',
+      name: strDrink,
+      image: strDrinkThumb,
+    };
+  };
+
+  const checkingRecipeRepeated = (recipeStorage, recipeFormatt) => (
+    recipeStorage.some((recipe) => (
+      recipe.id === recipeFormatt.id
+    ))
+  );
+
+  const checkingFavoriteRecipe = (recipeLocalStorage) => {
+    const recipeDrinkFormatted = recipeFormat();
+    if (recipeLocalStorage === null) {
+      return [{ ...recipeDrinkFormatted }];
+    }
+    // Testa se a receita já esta salva
+    if (!checkingRecipeRepeated(recipeLocalStorage, recipeDrinkFormatted)) {
+      return [...recipeLocalStorage, recipeDrinkFormatted];
+    }
+    console.log(`Receita ${recipeDrinks.strDrink} já foi salva`);
+    return recipeLocalStorage;
+  };
+
+  const handleFavorite = () => {
+    console.log(recipeDrinks);
+    // Traz o que está salvo no localStorage
+    const getRecipeStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    // Salva em um array o spred do localStorage (se tiver) e a receita atual
+    const newFavoriteRecipes = checkingFavoriteRecipe(getRecipeStorage);
+    // Retorna o array para o localStorage
+    localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoriteRecipes));
   };
 
   return (
     <>
       <img
         data-testid="recipe-photo"
-        src={ RecipeDrinks.strDrinkThumb }
-        alt={ RecipeDrinks.strDrink }
+        src={ recipeDrinks.strDrinkThumb }
+        alt={ recipeDrinks.strDrink }
       />
-      <h1 data-testid="recipe-title">{RecipeDrinks.strDrink}</h1>
-      <h3 data-testid="recipe-category">{RecipeDrinks.strAlcoholic}</h3>
+      <h1 data-testid="recipe-title">{recipeDrinks.strDrink}</h1>
+      <h3 data-testid="recipe-category">{recipeDrinks.strAlcoholic}</h3>
       <button
         type="button"
         data-testid="share-btn"
@@ -67,6 +110,7 @@ function RecipeDrinksDetails({ match }) {
       <button
         type="button"
         data-testid="favorite-btn"
+        onClick={ handleFavorite }
       >
         Favoritar Receita
       </button>
@@ -81,7 +125,7 @@ function RecipeDrinksDetails({ match }) {
           </li>
         ))}
       </ul>
-      <p data-testid="instructions">{RecipeDrinks.strInstructions}</p>
+      <p data-testid="instructions">{recipeDrinks.strInstructions}</p>
 
       <div>
         <CarouselMeals />
