@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import copy from 'clipboard-copy';
 import { Link } from 'react-router-dom';
 import imageProfile from '../images/profileIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
@@ -27,10 +28,20 @@ const mockRecipe = [
   }];
 
 function FavoritedRecipes() {
+  const [shareCopyRender, setShareCopyRender] = useState(false);
+
   const changeImageFavorite = () => {
     // const recipesFavorited = JSON.parse(localStorage.getItem('favoriteRecipes'));
   // const NameButton = !recipesFavorited ? 'Start Recipe' : 'Continue Recipe';
   };
+
+  function handleClickShareBtn(type, id) {
+    if (type === 'meal') {
+      console.log(type);
+      copy(`http://localhost:3000/meals/${id}`);
+    }
+    setShareCopyRender(true);
+  }
 
   return (
     <>
@@ -104,6 +115,7 @@ function FavoritedRecipes() {
               <div>
                 <button
                   type="button"
+                  onClick={ () => handleClickShareBtn(type, id) }
                 >
                   <img
                     data-testid={ `${index}-horizontal-share-btn` }
@@ -111,6 +123,7 @@ function FavoritedRecipes() {
                     alt="share"
                   />
                 </button>
+                {shareCopyRender && <h4>Link copied!</h4>}
                 <button type="button" onClick={ changeImageFavorite }>
                   <img
                     data-testid={ `${index}-horizontal-favorite-btn` }
