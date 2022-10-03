@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import CarouselDrinks from '../components/CarouselDrinks';
 // Auxílio Luiz Filipe
 function RecipeMealsDetails({ match }) {
-  const [RecipeMeals, setRecipeMeals] = useState({});
+  const [recipeMeals, setRecipeMeals] = useState({});
   const [shareCopyRender, setShareCopyRender] = useState(false);
   const { params: { id } } = match;
   let renderButton = '';
@@ -41,21 +41,63 @@ function RecipeMealsDetails({ match }) {
     for (let index = 0; index <= NUMBER_QUINZE; index += 1) {
       const ingredient = `strIngredient${index}`;
       const measure = `strMeasure${index}`;
-      if (RecipeMeals[ingredient] && RecipeMeals[measure] !== null) {
-        ingredients.push(`${RecipeMeals[ingredient]} (${RecipeMeals[measure]}) `);
+      if (recipeMeals[ingredient] && recipeMeals[measure] !== null) {
+        ingredients.push(`${recipeMeals[ingredient]} (${recipeMeals[measure]}) `);
       }
     }
     return ingredients;
   };
+
+  const recipeFormat = () => {
+    const { idMeal, strArea, strCategory, strMeal, strMealThumb } = recipeMeals;
+    return {
+      id: idMeal,
+      type: 'meal',
+      nationality: strArea,
+      category: strCategory,
+      alcoholicOrNot: '',
+      name: strMeal,
+      image: strMealThumb,
+    };
+  };
+
+  const checkingRecipeRepeated = (recipeStorage, recipeFormatt) => (
+    recipeStorage.some((recipe) => (
+      recipe.id === recipeFormatt.id
+    ))
+  );
+
+  const checkingFavoriteRecipe = (recipeLocalStorage) => {
+    const recipeMealFormatted = recipeFormat();
+    if (recipeLocalStorage === null) {
+      return [{ ...recipeMealFormatted }];
+    }
+    if (!checkingRecipeRepeated(recipeLocalStorage, recipeMealFormatted)) {
+      return [...recipeLocalStorage, recipeMealFormatted];
+    }
+    console.log(`Receita ${recipeMeals.strMeal} já foi salva`);
+    return recipeLocalStorage;
+  };
+
+  const handleFavorite = () => {
+    console.log(recipeMeals);
+    // Traz o que está salvo no localStorage
+    const getRecipeStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    // Salva em um array o spred do localStorage (se tiver) e a receita atual
+    const newFavoriteRecipes = checkingFavoriteRecipe(getRecipeStorage);
+    // Retorna o array para o localStorage
+    localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoriteRecipes));
+  };
+
   return (
     <>
       <img
         data-testid="recipe-photo"
-        src={ RecipeMeals.strMealThumb }
-        alt={ RecipeMeals.strMeal }
+        src={ recipeMeals.strMealThumb }
+        alt={ recipeMeals.strMeal }
       />
-      <h1 data-testid="recipe-title">{RecipeMeals.strMeal}</h1>
-      <h3 data-testid="recipe-category">{RecipeMeals.strCategory}</h3>
+      <h1 data-testid="recipe-title">{recipeMeals.strMeal}</h1>
+      <h3 data-testid="recipe-category">{recipeMeals.strCategory}</h3>
       <button
         type="button"
         data-testid="share-btn"
@@ -67,6 +109,7 @@ function RecipeMealsDetails({ match }) {
       <button
         type="button"
         data-testid="favorite-btn"
+        onClick={ handleFavorite }
       >
         Favoritar Receita
       </button>
@@ -81,11 +124,11 @@ function RecipeMealsDetails({ match }) {
           </li>
         ))}
       </ul>
-      <p data-testid="instructions">{RecipeMeals.strInstructions}</p>
-      { embedURL(RecipeMeals.strYoutube)
+      <p data-testid="instructions">{recipeMeals.strInstructions}</p>
+      { embedURL(recipeMeals.strYoutube)
         && <iframe
-          src={ embedURL(RecipeMeals.strYoutube) }
-          title={ RecipeMeals.strMeal }
+          src={ embedURL(recipeMeals.strYoutube) }
+          title={ recipeMeals.strMeal }
           allowFullScreen
           data-testid="video"
         />}

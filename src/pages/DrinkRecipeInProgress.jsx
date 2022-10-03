@@ -17,6 +17,7 @@ function DrinkRecipeInProgress() {
     if (window.location.pathname.includes('/drinks')) {
       fetchDrinksDetails(id);
     }
+    // eslint-disable-next-line
   }, []);
 
   return (
