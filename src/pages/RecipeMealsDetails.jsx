@@ -76,16 +76,13 @@ function RecipeMealsDetails({ match }) {
       return [...recipeLocalStorage, recipeMealFormatted];
     }
     console.log(`Receita ${recipeMeals.strMeal} já foi salva`);
-    return recipeLocalStorage;
+    return recipeLocalStorage.filter((recipe) => recipe.id !== recipeMealFormatted.id);
   };
 
   const handleFavorite = () => {
     console.log(recipeMeals);
-    // Traz o que está salvo no localStorage
     const getRecipeStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
-    // Salva em um array o spred do localStorage (se tiver) e a receita atual
     const newFavoriteRecipes = checkingFavoriteRecipe(getRecipeStorage);
-    // Retorna o array para o localStorage
     localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoriteRecipes));
   };
 
@@ -111,7 +108,7 @@ function RecipeMealsDetails({ match }) {
         data-testid="favorite-btn"
         onClick={ handleFavorite }
       >
-        Favoritar Receita
+        <img src="src/images/whiteHeartIcon.svg" alt="img coração" />
       </button>
       <ul>
         <h6>Ingredients:</h6>
