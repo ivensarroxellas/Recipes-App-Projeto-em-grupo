@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import copy from 'clipboard-copy';
 import imageProfile from '../images/profileIcon.svg';
 
 function DoneRecipes() {
   const [showRecipe, setShowRecipe] = useState([]);
+  const [shareCopyRender, setShareCopyRender] = useState(false);
+
+  const handleShareLink = (id, type) => {
+    setShareCopyRender(true);
+    copy(`http://localhost:3000/${type}s/${id}`);
+  };
 
   const doneRecipes = [
     {
@@ -49,7 +56,6 @@ function DoneRecipes() {
     setShowRecipe(doneRecipes);
   };
 
-  console.log(showRecipe);
   return (
     <div>
       <h1 data-testid="page-title">Done Recipes</h1>
@@ -82,52 +88,61 @@ function DoneRecipes() {
         </button>
 
         {
-          showRecipe.map(({ image, name, category, tags }, index) => (
-            <section key={ index }>
-              <img
-                src={ image }
-                data-testid={ `${index}-horizontal-image` }
-                alt={ name }
-              />
+          showRecipe.map(
+            (
+              { type, image, name, category, tags, nationality, alcoholicOrNot, id },
+              index,
+            ) => (
+              <section key={ index }>
+                <img
+                  src={ image }
+                  data-testid={ `${index}-horizontal-image` }
+                  alt={ name }
+                />
 
-              <h3
-                data-testid={ `${index}-horizontal-top-text` }
-              >
-                { category }
-              </h3>
+                <h3
+                  data-testid={ `${index}-horizontal-top-text` }
+                >
+                  { type === 'meal'
+                    ? `${nationality} - ${category}`
+                    : `${alcoholicOrNot} - ${category}` }
+                </h3>
 
-              <h4
-                data-testid={ `${index}-horizontal-name` }
-              >
-                { name }
-              </h4>
+                <h4
+                  data-testid={ `${index}-horizontal-name` }
+                >
+                  { name }
+                </h4>
 
-              <h5
-                data-testid={ `${index}-horizontal-done-date` }
-              >
-                {new Date().toLocaleDateString()}
-              </h5>
+                <h5
+                  data-testid={ `${index}-horizontal-done-date` }
+                >
+                  23/06/2020
+                </h5>
 
-              <button
-                data-testid={ `${index}-horizontal-share-btn` }
-                type="button"
-              >
-                Share
-              </button>
-              {
-                tags.map((tag, i) => (
-                  <spam
-                    key={ i }
-                    data-testid={ `${index}-${tag}-horizontal-tag` }
-                  >
-                    {tag}
-                  </spam>
-                ))
-              }
+                <button
+                  src="./images/shareIcon.svg"
+                  data-testid={ `${index}-horizontal-share-btn` }
+                  type="button"
+                  onClick={ () => handleShareLink(id, type) }
+                >
+                  Share
+                </button>
+                { shareCopyRender && <h3>Link copied!</h3>}
 
-            </section>
-
-          ))
+                {
+                  tags.map((tag, i) => (
+                    <spam
+                      key={ i }
+                      data-testid={ `${index}-${tag}-horizontal-tag` }
+                    >
+                      {tag}
+                    </spam>
+                  ))
+                }
+              </section>
+            ),
+          )
         }
 
       </section>
