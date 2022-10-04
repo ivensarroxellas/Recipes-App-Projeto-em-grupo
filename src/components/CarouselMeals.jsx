@@ -19,7 +19,8 @@ function CarouselMeals() {
       }
     };
     fetchMealsRecomended();
-  }, []); // eslint-disable-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleLeftClick = (e) => {
     e.preventDefault();
