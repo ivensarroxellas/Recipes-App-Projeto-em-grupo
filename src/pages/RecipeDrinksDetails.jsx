@@ -3,14 +3,25 @@ import copy from 'clipboard-copy';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import CarouselMeals from '../components/CarouselMeals';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 // Auxílio Luiz Filipe
 function RecipeDrinksDetails({ match }) {
   const [recipeDrinks, setRecipeDrinks] = useState({});
   const [shareCopyRender, setShareCopyRender] = useState(false);
+  const [getRecipeStorage, setGetRecipeStorage] = useState([]);
+  const [favIcon, setFavIcon] = useState(false);
   const { params: { id } } = match;
   let renderButton = '';
   const history = useHistory();
+
+  useEffect(() => {
+    const getLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    if (getLocalStorage) {
+      setGetRecipeStorage(getLocalStorage);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchDrink = async () => {
@@ -20,6 +31,19 @@ function RecipeDrinksDetails({ match }) {
     };
     fetchDrink();
   }, [id]);
+
+  const iconFavorite = () => {
+    const checkFavorite = getRecipeStorage.some((recipe) => recipe.id === id);
+    if (checkFavorite) {
+      setFavIcon(true);
+    } else {
+      setFavIcon(false);
+    }
+  };
+
+  useEffect(() => {
+    iconFavorite();
+  });
 
   function handleClickShareBtn() {
     setShareCopyRender(true);
@@ -48,8 +72,7 @@ function RecipeDrinksDetails({ match }) {
   };
 
   const recipeFormat = () => {
-    const { idDrink, strCategory, strDrink, strDrinkThumb,
-    } = recipeDrinks;
+    const { idDrink, strCategory, strDrink, strDrinkThumb } = recipeDrinks;
     return {
       id: idDrink,
       type: 'drink',
@@ -72,22 +95,16 @@ function RecipeDrinksDetails({ match }) {
     if (recipeLocalStorage === null) {
       return [{ ...recipeDrinkFormatted }];
     }
-    // Testa se a receita já esta salva
     if (!checkingRecipeRepeated(recipeLocalStorage, recipeDrinkFormatted)) {
       return [...recipeLocalStorage, recipeDrinkFormatted];
     }
-    console.log(`Receita ${recipeDrinks.strDrink} já foi salva`);
-    return recipeLocalStorage;
+    return recipeLocalStorage.filter((recipe) => recipe.id !== recipeDrinkFormatted.id);
   };
 
   const handleFavorite = () => {
-    console.log(recipeDrinks);
-    // Traz o que está salvo no localStorage
-    const getRecipeStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
-    // Salva em um array o spred do localStorage (se tiver) e a receita atual
     const newFavoriteRecipes = checkingFavoriteRecipe(getRecipeStorage);
-    // Retorna o array para o localStorage
     localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoriteRecipes));
+    setGetRecipeStorage(JSON.parse(localStorage.getItem('favoriteRecipes')));
   };
 
   return (
@@ -109,10 +126,11 @@ function RecipeDrinksDetails({ match }) {
       {shareCopyRender && <h4>Link copied!</h4>}
       <button
         type="button"
-        data-testid="favorite-btn"
         onClick={ handleFavorite }
       >
-        Favoritar Receita
+        { favIcon
+          ? <img data-testid="favorite-btn" src={ blackHeartIcon } alt="favorite" />
+          : <img data-testid="favorite-btn" src={ whiteHeartIcon } alt="not favorite" />}
       </button>
       <ul>
         <h6>Ingredients:</h6>

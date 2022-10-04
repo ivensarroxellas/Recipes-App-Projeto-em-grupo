@@ -3,10 +3,16 @@ import copy from 'clipboard-copy';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import CarouselDrinks from '../components/CarouselDrinks';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
+
 // Auxílio Luiz Filipe
 function RecipeMealsDetails({ match }) {
   const [recipeMeals, setRecipeMeals] = useState({});
   const [shareCopyRender, setShareCopyRender] = useState(false);
+  const [getRecipeStorage, setGetRecipeStorage] = useState([]);
+  const [favIcon, setFavIcon] = useState(false);
+
   const { params: { id } } = match;
   let renderButton = '';
   const history = useHistory();
@@ -17,6 +23,14 @@ function RecipeMealsDetails({ match }) {
       return newURL;
     }
   };
+
+  useEffect(() => {
+    const getLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    if (getLocalStorage) {
+      setGetRecipeStorage(getLocalStorage);
+    }
+  }, []);
+
   useEffect(() => {
     const fetchMeal = async () => {
       const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
@@ -25,6 +39,20 @@ function RecipeMealsDetails({ match }) {
     };
     fetchMeal();
   }, [id]);
+
+  const iconFavorite = () => {
+    const checkFavorite = getRecipeStorage.some((recipe) => recipe.id === id);
+    if (checkFavorite) {
+      setFavIcon(true);
+    } else {
+      setFavIcon(false);
+    }
+  };
+
+  useEffect(() => {
+    iconFavorite();
+  });
+
   function handleClickShareBtn() {
     setShareCopyRender(true);
     copy(`http://localhost:3000${window.location.pathname}`);
@@ -45,7 +73,6 @@ function RecipeMealsDetails({ match }) {
         ingredients.push(`${recipeMeals[ingredient]} (${recipeMeals[measure]}) `);
       }
     }
-    console.log('ingredients: ', ingredients);
     return ingredients;
   };
 
@@ -76,17 +103,14 @@ function RecipeMealsDetails({ match }) {
     if (!checkingRecipeRepeated(recipeLocalStorage, recipeMealFormatted)) {
       return [...recipeLocalStorage, recipeMealFormatted];
     }
-    // console.log(`Receita ${recipeMeals.strMeal} já foi salva`);
-    return recipeLocalStorage;
+    console.log(`Receita ${recipeMeals.strMeal} já foi salva`);
+    return recipeLocalStorage.filter((recipe) => recipe.id !== recipeMealFormatted.id);
   };
 
   const handleFavorite = () => {
-    // Traz o que está salvo no localStorage
-    const getRecipeStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
-    // Salva em um array o spred do localStorage (se tiver) e a receita atual
     const newFavoriteRecipes = checkingFavoriteRecipe(getRecipeStorage);
-    // Retorna o array para o localStorage
     localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoriteRecipes));
+    setGetRecipeStorage(JSON.parse(localStorage.getItem('favoriteRecipes')));
   };
 
   return (
@@ -108,10 +132,11 @@ function RecipeMealsDetails({ match }) {
       {shareCopyRender && <h4>Link copied!</h4>}
       <button
         type="button"
-        data-testid="favorite-btn"
         onClick={ handleFavorite }
       >
-        Favoritar Receita
+        { favIcon
+          ? <img data-testid="favorite-btn" src={ blackHeartIcon } alt="favorite" />
+          : <img data-testid="favorite-btn" src={ whiteHeartIcon } alt="not favorite" />}
       </button>
       <ul>
         <h6>Ingredients:</h6>
