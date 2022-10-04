@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import copy from 'clipboard-copy';
 import { useParams } from 'react-router-dom';
 
 function DrinkRecipeInProgress() {
   const [drinkDetails, setDrinkDetails] = useState({});
   const [renderPermission, setrenderPermission] = useState(false);
+  const [shareCopyRender, setShareCopyRender] = useState(false);
   const { id } = useParams();
 
   const fetchDrinksDetails = async (idDrink) => {
@@ -19,6 +21,12 @@ function DrinkRecipeInProgress() {
     }
     // eslint-disable-next-line
   }, []);
+
+  const handleCopy = () => {
+    setShareCopyRender(true);
+    const inProgress = window.location.pathname.indexOf('/in-progress');
+    copy(`http://localhost:3000${window.location.pathname.slice(0, inProgress)}`);
+  };
 
   const rendIngredients = () => {
     const ingredients = [];
@@ -52,7 +60,14 @@ function DrinkRecipeInProgress() {
               data-testid="recipe-photo"
             />
             <p data-testid="recipe-title">{ elem.strDrink }</p>
-            <button data-testid="share-btn" type="button">Share</button>
+            {shareCopyRender && <h4>Link copied!</h4>}
+            <button
+              data-testid="share-btn"
+              type="button"
+              onClick={ handleCopy }
+            >
+              Share
+            </button>
             <button data-testid="favorite-btn" type="button">Favorite</button>
             <p data-testid="recipe-category">{ elem.strCategory }</p>
             <p data-testid="instructions">{ elem.strInstructions }</p>

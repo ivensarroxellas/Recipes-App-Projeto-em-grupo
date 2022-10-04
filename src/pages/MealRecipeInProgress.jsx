@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import copy from 'clipboard-copy';
 import { useParams } from 'react-router-dom';
 
 function MealRecipeInProgress() {
   const [mealDetails, setMealDetails] = useState({});
   const [renderPermission, setrenderPermission] = useState(false);
+  const [shareCopyRender, setShareCopyRender] = useState(false);
   const { id } = useParams();
 
   const fetchMealsDetails = async (idMeal) => {
@@ -20,19 +22,23 @@ function MealRecipeInProgress() {
     // eslint-disable-next-line
   }, []);
 
+  const handleCopy = () => {
+    setShareCopyRender(true);
+    const inProgress = window.location.pathname.indexOf('/in-progress');
+    copy(`http://localhost:3000${window.location.pathname.slice(0, inProgress)}`);
+  };
+
   const rendIngredients = () => {
     const ingredients = [];
     const NUMBER_QUINZE = 15;
     for (let index = 0; index <= NUMBER_QUINZE; index += 1) {
       const ingredient = `strIngredient${index}`;
       const measure = `strMeasure${index}`;
-      console.log('mealDetails: ', mealDetails.meals[0]);
       if (mealDetails.meals[0][ingredient] && mealDetails.meals[0][measure] !== null) {
         ingredients.push(`${mealDetails.meals[0][ingredient]} 
         ${mealDetails.meals[0][measure]}) `);
       }
     }
-    console.log('ingredients: ', ingredients);
     return ingredients;
   };
 
@@ -48,7 +54,14 @@ function MealRecipeInProgress() {
               data-testid="recipe-photo"
             />
             <p data-testid="recipe-title">{ elem.strMeal }</p>
-            <button data-testid="share-btn" type="button">Share</button>
+            {shareCopyRender && <h4>Link copied!</h4>}
+            <button
+              data-testid="share-btn"
+              type="button"
+              onClick={ handleCopy }
+            >
+              Share
+            </button>
             <button data-testid="favorite-btn" type="button">Favorite</button>
             <p data-testid="recipe-category">{ elem.strCategory }</p>
             <p data-testid="instructions">{ elem.strInstructions }</p>
