@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import copy from 'clipboard-copy';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 function MealRecipeInProgress() {
   const [mealDetails, setMealDetails] = useState({});
   const [renderPermission, setrenderPermission] = useState(false);
   const [shareCopyRender, setShareCopyRender] = useState(false);
   const { id } = useParams();
+
+  const history = useHistory();
 
   const fetchMealsDetails = async (idMeal) => {
     const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`);
@@ -40,6 +42,10 @@ function MealRecipeInProgress() {
       }
     }
     return ingredients;
+  };
+
+  const redirectToFinishDoneRecipe = () => {
+    history.push('/done-recipes');
   };
 
   return (
@@ -80,7 +86,14 @@ function MealRecipeInProgress() {
             ))}
           </div>
         )))}
-      <button data-testid="finish-recipe-btn" type="button">Finish Recipe</button>
+      <button
+        data-testid="finish-recipe-btn"
+        type="button"
+        onClick={ redirectToFinishDoneRecipe }
+      >
+        Finish Recipe
+
+      </button>
     </div>
   );
 }

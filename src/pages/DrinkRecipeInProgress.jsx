@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import copy from 'clipboard-copy';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 function DrinkRecipeInProgress() {
   const [drinkDetails, setDrinkDetails] = useState({});
   const [renderPermission, setrenderPermission] = useState(false);
   const [shareCopyRender, setShareCopyRender] = useState(false);
   const { id } = useParams();
+
+  const history = useHistory();
 
   const fetchDrinksDetails = async (idDrink) => {
     const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${idDrink}`);
@@ -48,6 +50,10 @@ function DrinkRecipeInProgress() {
     return ingredients;
   };
 
+  const redirectToFinishDoneRecipe = () => {
+    history.push('/done-recipes');
+  };
+
   return (
     <div>
       {renderPermission && (
@@ -86,7 +92,14 @@ function DrinkRecipeInProgress() {
             ))}
           </div>
         )))}
-      <button data-testid="finish-recipe-btn" type="button">Finish Recipe</button>
+      <button
+        data-testid="finish-recipe-btn"
+        type="button"
+        onClick={ redirectToFinishDoneRecipe }
+      >
+        Finish Recipe
+
+      </button>
     </div>
   );
 }

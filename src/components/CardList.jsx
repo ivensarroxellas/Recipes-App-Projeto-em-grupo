@@ -49,15 +49,7 @@ function CardList() {
     } return handleShowInitialRecipes();
   };
 
-  // const showIfEmpty = () => {
-  //   if (filtredCategoryMeals.length === 0) {
-  //     return showMealCard(initialMeals);
-  //   } if (filtredCategoryDrinks.length === 0) {
-  //     return showMealCard(initialDrinks);
-  //   }
-  // };
-
-  const showRecipesList = () => {
+  const showRecipes = () => {
     const categoryMeals = ['Beef', 'Breakfast', 'Chicken', 'Dessert', 'Goat'];
     const categoryDrinks = ['Ordinary Drink', 'Cocktail', 'Shake',
       'Other/Unknown', 'Cocoa'];
@@ -77,13 +69,9 @@ function CardList() {
   };
 
   return (
-
     <div>
-      <section />
-      { showRecipesList() }
-
+      { showRecipes() }
     </div>
-
   );
 }
 
