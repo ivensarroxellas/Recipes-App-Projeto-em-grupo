@@ -39,7 +39,6 @@ function FilterButton() {
 
   useEffect(() => {
     handleButtonFetch();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
